@@ -83,10 +83,6 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
     }
     @Override
     public void onItemClick(Event event) {
-        // Открываем новое окно
-        //Intent intent = new Intent(getContext(), ProfileFragment.class);
-        //intent.putExtra("event", event); // Если вам нужно передать какие-то данные в новое окно
-        //startActivity(intent);
         Intent i = new Intent(requireActivity(), EventFull.class);
         i.putExtra("eventID", event.getEventID());
         startActivity(i);

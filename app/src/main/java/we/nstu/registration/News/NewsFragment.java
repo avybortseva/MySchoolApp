@@ -72,11 +72,6 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        // Создаем список событий
-        /*newsList = new ArrayList<>();*/
-        //newsList.add(new News("Научно-практической конференции обучающихся 5-8 классов «Открытия»", "10:15 | 03.03.2024", "","1"));
-        // Добавьте другие события в список, если нужно
-
         String email = MainActivity.getEmail(getContext());
 
         DocumentReference usersReference = MainActivity.database.collection("users").document(email);
@@ -116,19 +111,11 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                     Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
                 });
 
-        /*adapter = new NewsAdapter(newsList);
-        adapter.setOnItemClickListener(this);
-        recyclerView.setAdapter(adapter);*/
-
         return view;
     }
 
     @Override
     public void onItemClick(News news) {
-        // Открываем новое окно
-        //Intent intent = new Intent(getContext(), ProfileFragment.class);
-        //intent.putExtra("news", news); // Если вам нужно передать какие-то данные в новое окно
-        //startActivity(intent);
         Intent i = new Intent(requireActivity(), NewsFull.class);
         i.putExtra("newsID", news.getNewsID());
         startActivity(i);

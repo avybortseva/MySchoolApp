@@ -43,13 +43,11 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Инициализация даты на сегодня
         date = LocalDate.now();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentScheduleBinding.inflate(inflater, container, false);
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -58,14 +56,12 @@ public class ScheduleFragment extends Fragment {
         updateDateTextView();
 
         binding.nextDay.setOnClickListener(v -> {
-            // Прибавляем день к дате
             date = date.plusDays(1);
             setSchedule();
             updateDateTextView();
         });
 
         binding.prevDay.setOnClickListener(v -> {
-            // Отнимаем день от даты
             date = date.minusDays(1);
             setSchedule();
             updateDateTextView();
@@ -75,7 +71,6 @@ public class ScheduleFragment extends Fragment {
     }
 
     private void updateDateTextView() {
-        // Обновляем текст в TextView с датой
         binding.dateTextview.setText(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
     }
 
