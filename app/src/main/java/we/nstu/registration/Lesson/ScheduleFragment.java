@@ -25,7 +25,6 @@ public class ScheduleFragment extends Fragment {
     private FragmentScheduleBinding binding;
     private LocalDate date;
     private LessonAdapter adapter;
-    private ArrayList<Lesson> lessonList;
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -56,12 +55,14 @@ public class ScheduleFragment extends Fragment {
         updateDateTextView();
 
         binding.nextDay.setOnClickListener(v -> {
+            showProgressBar();
             date = date.plusDays(1);
             setSchedule();
             updateDateTextView();
         });
 
         binding.prevDay.setOnClickListener(v -> {
+            showProgressBar();
             date = date.minusDays(1);
             setSchedule();
             updateDateTextView();
@@ -74,8 +75,7 @@ public class ScheduleFragment extends Fragment {
         binding.dateTextview.setText(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
     }
 
-    private void setSchedule()
-    {
+    private void setSchedule() {
         DocumentReference usersReference = MainActivity.database.collection("users").document(MainActivity.getEmail(getContext()));
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -88,22 +88,32 @@ public class ScheduleFragment extends Fragment {
                                     Schedule schedule = Schedule.fromJson(scheduleJson);
                                     String formattedDate = date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
                                     List<Lesson> lessons = schedule.getLessonsForDate(formattedDate);
-                                    if(lessons == null)
-                                    {
-                                        lessons = new ArrayList<Lesson>();
-                                        lessons.add(new Lesson("","","","","",""));
+                                    if (lessons == null) {
+                                        lessons = new ArrayList<>();
+                                        lessons.add(new Lesson("", "", "", "", "", ""));
                                     }
                                     adapter = new LessonAdapter(lessons);
                                     binding.recyclerView.setAdapter(adapter);
+                                    hideProgressBar();
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
+                                    hideProgressBar();
                                 });
 
                     }
-                }).addOnFailureListener(e->{
+                }).addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
                 });
     }
 
+    private void showProgressBar() {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.recyclerView.setVisibility(View.GONE);
+    }
+
+    private void hideProgressBar() {
+        binding.progressBar.setVisibility(View.GONE);
+        binding.recyclerView.setVisibility(View.VISIBLE);
+    }
 }

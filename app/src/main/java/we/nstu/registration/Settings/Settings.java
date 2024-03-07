@@ -16,6 +16,5 @@ public class Settings extends AppCompatActivity {
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         String newsText = getIntent().getStringExtra("news");
-        binding.textView.setText(newsText);
     }
 }

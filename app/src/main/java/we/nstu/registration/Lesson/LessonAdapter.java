@@ -19,6 +19,9 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
         this.lessonList = lessonList;
     }
 
+    public LessonAdapter() {
+    }
+
     @NonNull
     @Override
     public LessonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -44,7 +44,9 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical"
+        android:minHeight="300dp"
         >
 
         <LinearLayout
@@ -94,6 +96,20 @@
 
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateDrawable="@drawable/spinner_ring"
+
+            android:paddingTop="100dp"
+            android:paddingBottom="100dp"
+            android:visibility="gone"
+
+            android:indeterminateOnly="true"
+            android:foregroundGravity="center"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -102,4 +118,5 @@
             />
 
     </LinearLayout>
+
 </LinearLayout>
