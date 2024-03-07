@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import we.nstu.registration.MainActivity;
 import we.nstu.registration.R;
 import we.nstu.registration.User.User;
+import we.nstu.registration.databinding.FragmentNewsBinding;
+import we.nstu.registration.databinding.FragmentScheduleBinding;
+
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.List;
@@ -30,7 +33,7 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
     private String mParam1;
     private String mParam2;
 
-    private RecyclerView recyclerView;
+    private FragmentNewsBinding binding;
     private NewsAdapter adapter;
     private List<News> newsList;
 
@@ -66,11 +69,12 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news, container, false);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentNewsBinding.inflate(inflater, container, false);
+
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        binding.progressBar.setVisibility(View.VISIBLE);
 
         String email = MainActivity.getEmail(getContext());
 
@@ -97,13 +101,14 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                                             news.setNewsTitle(news.getNewsTitle().substring(0,70) + "...");
                                         }
                                     }
-
                                     adapter = new NewsAdapter(newsList);
                                     adapter.setOnItemClickListener(this);
-                                    recyclerView.setAdapter(adapter);
+                                    binding.recyclerView.setAdapter(adapter);
+                                    binding.progressBar.setVisibility(View.GONE);
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(getContext(), "Ошибка при загрузке новостей", Toast.LENGTH_SHORT).show();
+                                    binding.progressBar.setVisibility(View.GONE);
                                 });
 
                     }
@@ -111,7 +116,7 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                     Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
                 });
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override

@@ -51,6 +51,7 @@ public class ScheduleFragment extends Fragment {
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        showProgressBar();
         setSchedule();
         updateDateTextView();
 
