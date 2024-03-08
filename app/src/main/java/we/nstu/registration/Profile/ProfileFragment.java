@@ -53,6 +53,8 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        binding.progressBar.setVisibility(View.VISIBLE);
+
         email = MainActivity.getEmail(getContext());
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -89,6 +91,7 @@ public class ProfileFragment extends Fragment {
                                 .addOnSuccessListener(ds -> {
                                     binding.classNumber.setText(ds.get("classroomName").toString());
                                     binding.teatcherFullName.setText(ds.get("teacher").toString());
+                                    binding.progressBar.setVisibility(View.GONE);
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
@@ -117,8 +120,6 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, GALLERY_REQUEST);
         });
-
-
 
         return view;
     }
