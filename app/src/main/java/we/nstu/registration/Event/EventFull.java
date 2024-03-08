@@ -15,7 +15,5 @@ public class EventFull extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = EventActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-
     }
 }

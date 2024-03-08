@@ -82,7 +82,6 @@ public class ScheduleFragment extends Fragment {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
-
                         MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
                                 .addOnSuccessListener(ds -> {
                                     String scheduleJson = ds.get("scheduleJSON").toString();

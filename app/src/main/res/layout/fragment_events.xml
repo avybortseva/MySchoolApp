@@ -42,10 +42,26 @@
 
 
     </LinearLayout>
-        <FrameLayout
+
+    <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".MainActivity">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indeterminateDrawable="@drawable/spinner_ring"
+            android:paddingTop="100dp"
+            android:paddingRight="175dp"
+            android:paddingLeft="175dp"
+            android:paddingBottom="100dp"
+            android:visibility="gone"
+
+            android:indeterminateOnly="true"
+            android:foregroundGravity="center"
+            />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginTop="0dp"
