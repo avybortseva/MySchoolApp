@@ -1,8 +1,13 @@
 package we.nstu.registration.Profile;
 
+import static android.app.Activity.RESULT_OK;
+
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +15,29 @@ import android.widget.Toast;
 
 import we.nstu.registration.Login.Login;
 import we.nstu.registration.MainActivity;
-import we.nstu.registration.Settings.Settings; // Убедитесь, что класс Settings существует и импортирован
+import we.nstu.registration.Registration.Registration;
+import we.nstu.registration.Settings.Settings;
 import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.FragmentProfileBinding;
+
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import static android.app.Activity.RESULT_OK;
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-
+    static final int GALLERY_REQUEST = 1;
+    private String email;
+    private StorageReference usersRef;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -26,6 +45,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -33,7 +53,19 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        String email = MainActivity.getEmail(getContext());
+        email = MainActivity.getEmail(getContext());
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        usersRef = storageRef.child("Users").child(email);
+
+        StorageReference imageRef = usersRef.child("profile_image.jpg");
+        imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            Glide.with(this)
+                    .load(uri)
+                    .into(binding.imageView);
+        }).addOnFailureListener(exception -> {
+        });
 
         DocumentReference usersReference = MainActivity.database.collection("users").document(email);
 
@@ -81,6 +113,58 @@ public class ProfileFragment extends Fragment {
             startActivity(i);
         });
 
+        binding.imageView.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, GALLERY_REQUEST);
+        });
+
+
+
         return view;
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                bitmap = cropToSquare(bitmap);
+                binding.imageView.setImageBitmap(bitmap);
+
+                // Сохранение в Firebase Storage
+                StorageReference imageRef = usersRef.child("profile_image.jpg");
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data2 = baos.toByteArray();
+
+                UploadTask uploadTask = imageRef.putBytes(data2);
+                uploadTask.addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Ошибка!", Toast.LENGTH_SHORT).show();
+                }).addOnSuccessListener(taskSnapshot -> {
+                    Toast.makeText(getContext(), "Картинка успешно сохранена!", Toast.LENGTH_SHORT).show();
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Bitmap cropToSquare(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = Math.min(width, height);
+        int newHeight = newWidth;
+
+        int cropW = (width - height) / 2;
+        cropW = Math.max(cropW, 0);
+        int cropH = (height - width) / 2;
+        cropH = Math.max(cropH, 0);
+
+        return Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight);
+    }
+
 }

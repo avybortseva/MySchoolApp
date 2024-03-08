@@ -58,7 +58,6 @@
             android:paddingLeft="175dp"
             android:paddingBottom="100dp"
             android:visibility="gone"
-
             android:indeterminateOnly="true"
             android:foregroundGravity="center"
             />

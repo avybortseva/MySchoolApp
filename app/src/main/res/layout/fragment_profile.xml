@@ -64,11 +64,14 @@
         android:orientation="vertical"
         android:paddingTop="15dp">
 
-
-        <com.mikhaellopez.circularimageview.CircularImageView
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/ic_login_person" />
+            android:src="@drawable/ic_login_person"
+            android:background="@drawable/circle_background"
+            android:clipToOutline="true"
+            />
 
         <TextView
             android:id="@+id/fullName"
