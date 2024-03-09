@@ -84,7 +84,19 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                     Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
                 });
 
+        binding.addNewsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddNewsDialog();
+            }
+        });
+
         return binding.getRoot();
+    }
+
+    private void showAddNewsDialog() {
+        AddNewsDialog dialog = new AddNewsDialog(newsList, adapter);
+        dialog.show(getChildFragmentManager(), "AddNewsDialog");
     }
 
     @Override
@@ -93,4 +105,5 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
         i.putExtra("newsID", news.getNewsID());
         startActivity(i);
     }
+
 }

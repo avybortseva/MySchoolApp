@@ -59,8 +59,8 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
                                 .addOnSuccessListener(ds -> {
                                     String eventsJson = ds.get("eventsJson").toString();
                                     SchoolEvent schoolEvent = SchoolEvent.eventFromJson(eventsJson);
-                                    List<Event> events = schoolEvent.getEventList();
-                                    adapter = new EventAdapter(events);
+                                    eventList = schoolEvent.getEventList();
+                                    adapter = new EventAdapter(eventList);
                                     adapter.setOnItemClickListener(this);
                                     binding.recyclerView.setAdapter(adapter);
                                     binding.progressBar.setVisibility(View.GONE);
@@ -75,7 +75,19 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
                     Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
                 });
 
+        binding.addEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddEventDialog();
+            }
+        });
+
         return binding.getRoot();
+    }
+
+    private void showAddEventDialog() {
+        AddEventDialog dialog = new AddEventDialog();
+        dialog.show(getChildFragmentManager(), "AddEventDialog");
     }
     @Override
     public void onItemClick(Event event) {

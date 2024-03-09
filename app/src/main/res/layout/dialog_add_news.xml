@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#EBECF4"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="Добавление новости"
+            android:textColor="@color/purple"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/newsTitleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Название новости"
+        android:textColor="@color/black"
+        android:inputType="textCapSentences"
+        android:layout_margin="10dp"/>
+
+    <EditText
+        android:id="@+id/newsDescriptionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Описание новости"
+        android:textColor="@color/black"
+        android:inputType="textCapSentences"
+        android:layout_margin="10dp"/>
+
+    <ImageButton
+        android:id="@+id/addNewsButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/btn_add_news_5"
+        android:layout_marginTop="16dp"
+        android:layout_margin="10dp"
+        android:backgroundTint="#00000000"/>
+
+
+
+</LinearLayout>
