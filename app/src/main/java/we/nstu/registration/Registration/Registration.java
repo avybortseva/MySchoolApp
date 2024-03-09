@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import we.nstu.registration.Login.Login;
+import we.nstu.registration.MainActivity;
 import we.nstu.registration.User.Invite;
 import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.FragmentRegistrationBinding;
@@ -35,7 +36,6 @@ public class Registration extends AppCompatActivity
                     binding.userFirstName.getText().toString(),
                     binding.userSecondName.getText().toString(),
                     binding.userThirdName.getText().toString(),
-                    binding.userPhone.getText().toString(),
                     binding.userEmail.getText().toString(),
                     binding.userPassword.getText().toString()
             );
@@ -66,7 +66,8 @@ public class Registration extends AppCompatActivity
                                                     reference.set(user)
                                                             .addOnSuccessListener(aVoid -> {
                                                                 Toast.makeText(Registration.this, "Вы успешно зарегестрированны", Toast.LENGTH_SHORT).show();
-                                                                startActivity(new Intent(Registration.this, Login.class));
+                                                                MainActivity.saveEmail(getApplicationContext(), user.getEmail());
+                                                                startActivity(new Intent(Registration.this, MainActivity.class));
                                                             })
                                                             .addOnFailureListener(e -> {
                                                                 Toast.makeText(Registration.this, "Ошибка при регистрации", Toast.LENGTH_SHORT).show();

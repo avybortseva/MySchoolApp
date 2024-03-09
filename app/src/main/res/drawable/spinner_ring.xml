@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <animated-rotate xmlns:android="http://schemas.android.com/apk/res/android"
     android:pivotX="50%"
     android:pivotY="50%" >
@@ -8,9 +7,6 @@
         android:shape="ring"
         android:thicknessRatio="5.333"
         android:useLevel="false" >
-        <size
-            android:height="18dip"
-            android:width="18dip" />
 
         <gradient
             android:centerColor="#88A500FF"

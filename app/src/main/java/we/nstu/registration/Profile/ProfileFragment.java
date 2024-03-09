@@ -75,7 +75,6 @@ public class ProfileFragment extends Fragment {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
-                        binding.phoneNumber.setText(user.getPhoneNumber());
                         binding.fullName.setText(user.getFirstName() + " " + user.getSecondName() + " " + user.getSurname());
                         binding.email.setText(email);
 

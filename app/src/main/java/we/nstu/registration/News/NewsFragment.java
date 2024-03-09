@@ -20,9 +20,11 @@ import we.nstu.registration.databinding.FragmentScheduleBinding;
 
 import com.google.firebase.firestore.DocumentReference;
 
+import java.util.Collections;
 import java.util.List;
 
-public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickListener {
+public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickListener
+{
     private FragmentNewsBinding binding;
     private NewsAdapter adapter;
     private List<News> newsList;
@@ -58,21 +60,32 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
 
                                     String newsJson = ds.get("newsJson").toString();
 
-                                    SchoolNews schoolNews = SchoolNews.newsFromJson(newsJson);
-
-                                    newsList = schoolNews.getNewsList();
-
-                                    for (News news : newsList)
+                                    if (newsJson != "")
                                     {
-                                        if(news.getNewsTitle().length() > 70)
+                                        SchoolNews schoolNews = SchoolNews.newsFromJson(newsJson);
+
+                                        newsList = schoolNews.getNewsList();
+
+                                        Collections.reverse(newsList);
+
+                                        for (News news : newsList)
                                         {
-                                            news.setNewsTitle(news.getNewsTitle().substring(0,70) + "...");
+                                            if(news.getNewsTitle().length() > 70)
+                                            {
+                                                news.setNewsTitle(news.getNewsTitle().substring(0,70) + "...");
+                                            }
                                         }
+
+                                        adapter = new NewsAdapter(newsList);
+                                        adapter.setOnItemClickListener(this);
+                                        binding.recyclerView.setAdapter(adapter);
+                                        binding.progressBar.setVisibility(View.GONE);
                                     }
-                                    adapter = new NewsAdapter(newsList);
-                                    adapter.setOnItemClickListener(this);
-                                    binding.recyclerView.setAdapter(adapter);
-                                    binding.progressBar.setVisibility(View.GONE);
+                                    else
+                                    {
+                                        Toast.makeText(getContext(), "Новостей нет", Toast.LENGTH_SHORT).show();
+                                        binding.progressBar.setVisibility(View.GONE);
+                                    }
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(getContext(), "Ошибка при загрузке новостей", Toast.LENGTH_SHORT).show();
@@ -84,19 +97,16 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                     Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
                 });
 
-        binding.addNewsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddNewsDialog();
-            }
+        binding.addNewsButton.setOnClickListener(v -> {
+            showAddNewsDialog();
         });
 
         return binding.getRoot();
     }
 
     private void showAddNewsDialog() {
-        AddNewsDialog dialog = new AddNewsDialog(newsList, adapter);
-        dialog.show(getChildFragmentManager(), "AddNewsDialog");
+        AddNewsDialog dialog = new AddNewsDialog();
+        dialog.show(getActivity().getSupportFragmentManager(), "AddNewsDialog");
     }
 
     @Override
@@ -105,5 +115,4 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
         i.putExtra("newsID", news.getNewsID());
         startActivity(i);
     }
-
 }
