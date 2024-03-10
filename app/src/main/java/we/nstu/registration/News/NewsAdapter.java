@@ -59,20 +59,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
                     if (documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
 
-                        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
-                                .addOnSuccessListener(ds -> {
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("News").child(String.valueOf(position)).child("0.jpg");
 
-                                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                                    StorageReference storageRef = storage.getReference();
-                                    StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("News").child(String.valueOf(position)).child("0.jpg");
+                        imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
 
-                                    imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-
-                                        Glide.with(holder.itemView)
-                                                .load(uri)
-                                                .into(holder.imageView);
-
-                                    });
+                            Glide.with(holder.itemView)
+                                    .load(uri)
+                                    .into(holder.imageView);
 
                                 });
 

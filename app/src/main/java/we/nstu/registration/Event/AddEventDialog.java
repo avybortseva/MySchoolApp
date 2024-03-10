@@ -1,9 +1,15 @@
 package we.nstu.registration.Event;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,21 +20,42 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import we.nstu.registration.MainActivity;
+import we.nstu.registration.News.News;
+import we.nstu.registration.News.SchoolNews;
 import we.nstu.registration.R;
+import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.DialogAddEventBinding;
 import we.nstu.registration.databinding.FragmentNewsBinding;
 
 public class AddEventDialog extends DialogFragment {
 
     private DialogAddEventBinding binding;
+    private final int GALLERY_REQUEST = 1;
+    private Uri uri;
+    private String email;
+    private List<Event> eventList;
+    private String eventDate;
+    private String eventTime;
 
 
     @Nullable
@@ -37,21 +64,78 @@ public class AddEventDialog extends DialogFragment {
         binding = DialogAddEventBinding.inflate(inflater, container, false);
 
         binding.addEventButton.setOnClickListener(v -> {
+
+            if (eventDate == null || eventTime == null || binding.eventTitleEditText.getText().toString() == "" || binding.eventDescriptionEditText.getText().toString() == "")
+            {
+                return;
+            }
+
+            email = MainActivity.getEmail(getContext());
+
+            DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+
+            usersReference.get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            User user = documentSnapshot.toObject(User.class);
+
+                            MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
+                                    .addOnSuccessListener(ds -> {
+
+                                        String eventsJson = ds.get("eventsJson").toString();
+
+                                        if(eventsJson != "")
+                                        {
+                                            SchoolEvent schoolEvent = SchoolEvent.eventFromJson(eventsJson);
+                                            eventList = schoolEvent.getEventList();
+                                        }
+                                        else
+                                        {
+                                            eventList = new ArrayList<>();
+                                        }
+
+                                        eventList.add(new Event(binding.eventTitleEditText.getText().toString(),binding.eventDescriptionEditText.getText().toString(), eventTime + " | " + eventDate, String.valueOf(eventList.size())));
+
+                                        SchoolEvent newSchoolEvent = new SchoolEvent(eventList);
+                                        String newEventsJson = newSchoolEvent.eventToJson();
+
+                                        MainActivity.database.collection("schools")
+                                                .document(String.valueOf(user.getSchoolID()))
+                                                .collection("classrooms")
+                                                .document(String.valueOf(user.getClassroomID()))
+                                                .update("eventsJson", newEventsJson);
+
+                                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                                        StorageReference storageRef = storage.getReference();
+                                        StorageReference newsRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("Events").child(String.valueOf(eventList.size() - 1));
+
+                                        if (uri!=null)
+                                        {
+
+                                            StorageReference imageRef = newsRef.child( "Event_logo.jpg");
+                                            imageRef.putFile(uri);
+
+                                        }
+                                    });
+
+                        }
+                    });
+
+
             dismiss();
         });
 
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                binding.dateButton.setText(dayOfMonth + "." + monthOfYear + "." + year);
+                eventDate =  String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear) + "." + year;
             }
         };
 
-        // Определите timeSetListener внутри вашего активити или фрагмента
         TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                binding.timeButton.setText(hourOfDay + " : " + minute);
+                eventTime = String.format("%02d", hourOfDay) + " : " + String.format("%02d", minute);
             }
         };
 
@@ -86,7 +170,22 @@ public class AddEventDialog extends DialogFragment {
             timePickerDialog.show();
         });
 
+        binding.imageButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, GALLERY_REQUEST);
+        });
+
         return binding.getRoot();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            uri = selectedImage;
+        }
     }
 
     @Override

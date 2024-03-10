@@ -9,7 +9,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import we.nstu.registration.MainActivity;
 import we.nstu.registration.R;
+import we.nstu.registration.User.User;
 
 import java.util.List;
 
@@ -35,8 +42,36 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
-        holder.eventImage.setImageResource(R.drawable.avatar);
+        //holder.eventImage.setImageResource(R.drawable.avatar);
         holder.eventName.setText(event.getEventName());
+        holder.eventTime.setText(event.getEventTime());
+        holder.eventDescription.setText(event.getEventDescription());
+
+        String email = MainActivity.getEmail(holder.eventImage.getContext());
+
+        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+
+        usersReference.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        User user = documentSnapshot.toObject(User.class);
+
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("Events").child(String.valueOf(position)).child("Event_logo.jpg");
+
+                        imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+
+                            Glide.with(holder.eventImage)
+                                    .load(uri)
+                                    .into(holder.eventImage);
+
+                                });
+
+                    }
+                });
+
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -55,13 +90,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         ImageView eventImage;
-        TextView eventName, eventTime;
+        TextView eventName, eventTime, eventDescription;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             eventImage = itemView.findViewById(R.id.eventImage);
             eventName = itemView.findViewById(R.id.eventName);
-            eventTime = itemView.findViewById(R.id.timeAndDate)   ;
+            eventTime = itemView.findViewById(R.id.eventTime);
+            eventDescription = itemView.findViewById(R.id.eventDescription);
 
 
         }

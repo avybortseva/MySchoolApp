@@ -56,6 +56,16 @@ public class AddNewsDialog extends DialogFragment {
 
         binding.addNewsButton.setOnClickListener(v -> {
 
+            if (binding.newsTitleEditText.getText().toString().isEmpty() || binding.newsDescriptionEditText.getText().toString().isEmpty() || uriList == null)
+            {
+                return;
+            }
+
+            if (uriList.size() < 1 || uriList.size() > 5)
+            {
+                return;
+            }
+
             email = MainActivity.getEmail(getContext());
 
             DocumentReference usersReference = MainActivity.database.collection("users").document(email);

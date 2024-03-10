@@ -35,7 +35,7 @@ import java.io.IOException;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-    static final int GALLERY_REQUEST = 1;
+    private final int GALLERY_REQUEST = 1;
     private String email;
     private StorageReference usersRef;
     public ProfileFragment() {

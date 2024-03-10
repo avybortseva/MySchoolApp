@@ -24,6 +24,7 @@ import we.nstu.registration.databinding.FragmentNewsBinding;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class EventsFragment extends Fragment implements EventAdapter.OnItemClickListener
@@ -58,12 +59,24 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
                         MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
                                 .addOnSuccessListener(ds -> {
                                     String eventsJson = ds.get("eventsJson").toString();
-                                    SchoolEvent schoolEvent = SchoolEvent.eventFromJson(eventsJson);
-                                    eventList = schoolEvent.getEventList();
-                                    adapter = new EventAdapter(eventList);
-                                    adapter.setOnItemClickListener(this);
-                                    binding.recyclerView.setAdapter(adapter);
-                                    binding.progressBar.setVisibility(View.GONE);
+
+                                    if (eventsJson != "")
+                                    {
+                                        SchoolEvent schoolEvent = SchoolEvent.eventFromJson(eventsJson);
+                                        eventList = schoolEvent.getEventList();
+
+                                        Collections.reverse(eventList);
+
+                                        adapter = new EventAdapter(eventList);
+                                        adapter.setOnItemClickListener(this);
+                                        binding.recyclerView.setAdapter(adapter);
+                                        binding.progressBar.setVisibility(View.GONE);
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(getContext(), "Новостей нет", Toast.LENGTH_SHORT).show();
+                                        binding.progressBar.setVisibility(View.GONE);
+                                    }
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
