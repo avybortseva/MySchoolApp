@@ -1,12 +1,19 @@
 package we.nstu.registration.Event;
 
+import com.google.firebase.firestore.DocumentReference;
+
 public class Event {
+    private DocumentReference documentReference;
     private String eventName;
     private String eventDescription;
     private String eventTime;
     private String eventID;
 
-
+    public void setDocumentReference(DocumentReference documentReference) {
+        this.documentReference = documentReference;
+    } public DocumentReference getDocumentReference() {
+        return documentReference;
+    }
 
     public Event(String eventName, String eventDescription, String eventTime, String eventID) {
         this.eventName = eventName;

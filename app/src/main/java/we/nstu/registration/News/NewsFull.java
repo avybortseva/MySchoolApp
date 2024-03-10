@@ -14,6 +14,7 @@ import java.util.List;
 
 public class NewsFull extends AppCompatActivity
 {
+
     private NewsActivityBinding binding;
 
     @Override

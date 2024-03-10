@@ -1,6 +1,7 @@
 package we.nstu.registration.Event;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import we.nstu.registration.Lesson.Lesson;
 import we.nstu.registration.Lesson.LessonAdapter;
 import we.nstu.registration.Lesson.Schedule;
 import we.nstu.registration.MainActivity;
+import we.nstu.registration.News.SwipeToDeleteCallback;
 import we.nstu.registration.R;
 import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.FragmentEventsBinding;
@@ -70,6 +72,9 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
                                         adapter = new EventAdapter(eventList);
                                         adapter.setOnItemClickListener(this);
                                         binding.recyclerView.setAdapter(adapter);
+                                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackEvent(adapter));
+                                        itemTouchHelper.attachToRecyclerView(binding.recyclerView);
+
                                         binding.progressBar.setVisibility(View.GONE);
                                     }
                                     else
@@ -88,12 +93,7 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
                     Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
                 });
 
-        binding.addEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddEventDialog();
-            }
-        });
+        binding.addEventButton.setOnClickListener(v -> showAddEventDialog());
 
         return binding.getRoot();
     }

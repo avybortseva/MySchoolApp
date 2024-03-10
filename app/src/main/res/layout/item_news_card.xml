@@ -20,6 +20,7 @@
         android:scaleType="centerCrop"
         android:background="@drawable/rounded_corners"
         android:clipToOutline="true"
+        android:padding="2dp"
         />
 
     <LinearLayout

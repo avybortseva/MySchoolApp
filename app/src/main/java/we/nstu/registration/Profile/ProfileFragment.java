@@ -80,7 +80,7 @@ public class ProfileFragment extends Fragment {
 
                         MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                                 .addOnSuccessListener(ds -> {
-                                   binding.schoolName.setText(ds.get("schoolName").toString());
+                                    binding.schoolName.setText(ds.get("schoolName").toString());
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
@@ -108,11 +108,6 @@ public class ProfileFragment extends Fragment {
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             requireActivity().finishAffinity();
-        });
-
-        binding.settingsButton.setOnClickListener(v -> {
-            Intent i = new Intent(requireActivity(), Settings.class);
-            startActivity(i);
         });
 
         binding.imageView.setOnClickListener(v -> {

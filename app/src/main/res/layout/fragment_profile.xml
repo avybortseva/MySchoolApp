@@ -132,7 +132,7 @@
             android:id="@+id/teatcherFullName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="55dp"
             android:text="Имя Фамилия Отчество"
             android:textColor="@android:color/darker_gray"
             android:textSize="16dp" />
@@ -281,13 +281,13 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_profile_phone" />
+            android:src="@drawable/ic_profile_status" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="Телефон"
+            android:text="Статус"
             android:textColor="@android:color/black"
             android:textSize="18dp"
             android:textStyle="bold" />
@@ -296,8 +296,8 @@
             android:id="@+id/phoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="54dp"
-            android:text="+79*********"
+            android:layout_marginLeft="70dp"
+            android:text="Статус"
             android:textColor="@android:color/darker_gray"
             android:textSize="16dp" />
 
@@ -311,24 +311,6 @@
         android:layout_marginRight="15dp"
         android:background="@android:color/darker_gray" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/settingsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@android:color/transparent"
-            android:drawableRight="@drawable/ic_profile_settings"
-            android:drawablePadding="8dp"
-            android:text="Настройки"
-            android:textColor="@color/purple"
-            android:textSize="16dp" />
-
-    </RelativeLayout>
 
 
 </LinearLayout>

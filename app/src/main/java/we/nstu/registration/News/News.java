@@ -1,14 +1,23 @@
 package we.nstu.registration.News;
 
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.List;
 
 public class News {
+    private DocumentReference documentReference;
     private String newsTitle;
     private String newsText;
     private String newsTime;
     private List<String> iamgesURL;
     private String newsID;
+    public void setDocumentReference(DocumentReference documentReference) {
+        this.documentReference = documentReference;
+    }
+    public DocumentReference getDocumentReference() {
+        return documentReference;
+    }
 
     public News(String newsTitle, String newsText, String newsTime, List<String> iamgesURL, String newsID) {
         this.newsTitle = newsTitle;

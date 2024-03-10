@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -24,7 +25,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
+
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> implements ItemTouchHelperAdapter{
 
     private List<News> newsList;
     private OnItemClickListener listener;
@@ -43,6 +45,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_card, parent, false);
         return new NewsViewHolder(view);
     }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
@@ -69,7 +73,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
                                     .load(uri)
                                     .into(holder.imageView);
 
-                                });
+                        });
 
                     }
                 });
@@ -104,7 +108,21 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     public interface OnItemClickListener {
         void onItemClick(News news);
     }
-
+    public void removeItem(int position) {
+        newsList.remove(position);
+        notifyItemRemoved(position);
+        // Здесь вам нужно будет также удалить элемент из базы данных
+        // Например, если у вас есть ссылка на DocumentReference для элемента, вы можете его удалить так:
+        // newsList.get(position).getDocumentReference().delete();
+    }
+    public News getItem(int position) {
+        return newsList.get(position);
+    }
+    @Override
+    public void onItemDismiss(int position) {
+        newsList.remove(position);
+        notifyItemRemoved(position);
+    }
 
 }
 

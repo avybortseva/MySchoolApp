@@ -14,13 +14,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.List;
+
 import we.nstu.registration.MainActivity;
 import we.nstu.registration.R;
 import we.nstu.registration.User.User;
 
-import java.util.List;
-
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> implements ItemTouchHelperAdapterEvent{
 
     private List<Event> eventList;
     private OnItemClickListener listener;
@@ -30,7 +30,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
-            this.listener = listener;}
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -42,12 +43,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
-        //holder.eventImage.setImageResource(R.drawable.avatar);
         holder.eventName.setText(event.getEventName());
         holder.eventTime.setText(event.getEventTime());
         holder.eventDescription.setText(event.getEventDescription());
 
-        String email = MainActivity.getEmail(holder.eventImage.getContext());
+        String email = MainActivity.getEmail(holder.itemView.getContext());
 
         DocumentReference usersReference = MainActivity.database.collection("users").document(email);
 
@@ -58,26 +58,21 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
-                        StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("Events").child(String.valueOf(position)).child("Event_logo.jpg");
+                        StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("Events").child(event.getEventID()).child("Event_logo.jpg");
 
-                        imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-
-                            Glide.with(holder.eventImage)
-                                    .load(uri)
-                                    .into(holder.eventImage);
-
-                                });
-
+                        imageRef.getDownloadUrl().addOnSuccessListener(uri -> Glide.with(holder.itemView.getContext())
+                                .load(uri)
+                                .into(holder.eventImage)).addOnFailureListener(e -> {
+                            // Handle any errors
+                        });
                     }
                 });
 
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 if (listener != null) {
                     listener.onItemClick(event);
-
                 }
             }
         });
@@ -98,12 +93,27 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             eventName = itemView.findViewById(R.id.eventName);
             eventTime = itemView.findViewById(R.id.eventTime);
             eventDescription = itemView.findViewById(R.id.eventDescription);
-
-
         }
     }
+
     public interface OnItemClickListener {
         void onItemClick(Event event);
     }
-}
 
+    public void removeItem(int position) {
+        eventList.remove(position);
+        notifyItemRemoved(position);
+        // Здесь вам нужно будет также удалить элемент из базы данных
+        // Например, если у вас есть ссылка на DocumentReference для элемента, вы можете его удалить так:
+        // newsList.get(position).getDocumentReference().delete();
+    }
+
+    public Event getItem(int position) {
+        return eventList.get(position);
+    }
+    @Override
+    public void onItemDismiss(int position) {
+        eventList.remove(position);
+        notifyItemRemoved(position);
+    }
+}

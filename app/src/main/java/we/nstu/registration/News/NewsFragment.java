@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +42,7 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         binding = FragmentNewsBinding.inflate(inflater, container, false);
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -79,6 +82,10 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                                         adapter = new NewsAdapter(newsList);
                                         adapter.setOnItemClickListener(this);
                                         binding.recyclerView.setAdapter(adapter);
+
+                                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapter));
+                                        itemTouchHelper.attachToRecyclerView(binding.recyclerView);
+
                                         binding.progressBar.setVisibility(View.GONE);
                                     }
                                     else
@@ -115,4 +122,5 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
         i.putExtra("newsID", news.getNewsID());
         startActivity(i);
     }
+
 }

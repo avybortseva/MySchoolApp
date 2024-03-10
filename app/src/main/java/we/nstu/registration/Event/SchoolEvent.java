@@ -9,30 +9,30 @@ import java.util.List;
 
 public class SchoolEvent {
 
-        private List<Event> eventList;
+    private List<Event> eventList;
 
-        public SchoolEvent(List<Event> eventList) {
-            this.eventList = eventList;
-        }
+    public SchoolEvent(List<Event> eventList) {
+        this.eventList = eventList;
+    }
 
-        public List<Event> getEventList() {
-            return eventList;
-        }
+    public List<Event> getEventList() {
+        return eventList;
+    }
 
-        public void setEventList(List<Event> eventList) {
-            this.eventList = eventList;
-        }
+    public void setEventList(List<Event> eventList) {
+        this.eventList = eventList;
+    }
 
-        public String eventToJson() {
-            Gson gson = new Gson();
-            return gson.toJson(this);
-        }
+    public String eventToJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
 
-        public static SchoolEvent eventFromJson(String json) {
-            Gson gson = new Gson();
-            Type schoolEventType = new TypeToken<SchoolEvent>(){}.getType();
-            return gson.fromJson(json, schoolEventType);
-        }
+    public static SchoolEvent eventFromJson(String json) {
+        Gson gson = new Gson();
+        Type schoolEventType = new TypeToken<SchoolEvent>(){}.getType();
+        return gson.fromJson(json, schoolEventType);
+    }
 
 
 
