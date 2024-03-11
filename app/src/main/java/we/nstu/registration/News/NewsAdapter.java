@@ -65,7 +65,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
-                        StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("News").child(String.valueOf(position)).child("0.jpg");
+                        StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("News").child(String.valueOf(news.getNewsID())).child("0.jpg");
 
                         imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
 
