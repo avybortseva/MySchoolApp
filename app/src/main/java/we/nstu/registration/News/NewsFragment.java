@@ -64,7 +64,12 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
 
                                     String newsJson = ds.get("newsJson").toString();
 
-                                    if (newsJson != "")
+                                    if (newsJson == "")
+                                    {
+                                        Toast.makeText(getContext(), "Новостей нет", Toast.LENGTH_SHORT).show();
+                                        binding.progressBar.setVisibility(View.GONE);
+                                    }
+                                    else
                                     {
                                         SchoolNews schoolNews = SchoolNews.newsFromJson(newsJson);
 
@@ -84,14 +89,9 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                                         adapter.setOnItemClickListener(this);
                                         binding.recyclerView.setAdapter(adapter);
 
-                                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapter));
+                                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapter, getContext()));
                                         itemTouchHelper.attachToRecyclerView(binding.recyclerView);
 
-                                        binding.progressBar.setVisibility(View.GONE);
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(getContext(), "Новостей нет", Toast.LENGTH_SHORT).show();
                                         binding.progressBar.setVisibility(View.GONE);
                                     }
                                 })

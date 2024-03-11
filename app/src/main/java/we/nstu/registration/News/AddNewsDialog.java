@@ -47,7 +47,6 @@ public class AddNewsDialog extends DialogFragment {
     private List<Uri> uriList;
     private OnNewsAddedListener listener;
 
-
     public AddNewsDialog() {
     }
 

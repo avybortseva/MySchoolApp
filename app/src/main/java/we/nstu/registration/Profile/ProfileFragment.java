@@ -61,13 +61,16 @@ public class ProfileFragment extends Fragment {
         StorageReference storageRef = storage.getReference();
         usersRef = storageRef.child("Users").child(email);
 
-        StorageReference imageRef = usersRef.child("profile_image.jpg");
-        imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            Glide.with(this)
-                    .load(uri)
-                    .into(binding.imageView);
-        }).addOnFailureListener(exception -> {
-        });
+        if (isAdded()) {
+            StorageReference imageRef = usersRef.child("profile_image.jpg");
+            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                if (isAdded()) {
+                    Glide.with(requireActivity())
+                            .load(uri)
+                            .into(binding.imageView);
+                }
+            });
+        }
 
         DocumentReference usersReference = MainActivity.database.collection("users").document(email);
 
