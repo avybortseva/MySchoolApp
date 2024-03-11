@@ -56,6 +56,11 @@ public class AddEventDialog extends DialogFragment {
     private List<Event> eventList;
     private String eventDate;
     private String eventTime;
+    private OnEventAddedListener listener;
+
+    public void setOnEventsAddedListener(OnEventAddedListener listener) {
+        this.listener = listener;
+    }
 
 
     @Nullable
@@ -116,6 +121,11 @@ public class AddEventDialog extends DialogFragment {
                                             imageRef.putFile(uri);
 
                                         }
+
+                                        if (listener != null) {
+                                            listener.onEventAdded();
+                                        }
+
                                     });
 
                         }
@@ -135,7 +145,7 @@ public class AddEventDialog extends DialogFragment {
         TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                eventTime = String.format("%02d", hourOfDay) + " : " + String.format("%02d", minute);
+                eventTime = String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute);
             }
         };
 
@@ -204,5 +214,9 @@ public class AddEventDialog extends DialogFragment {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         return dialog;
+    }
+
+    public interface OnEventAddedListener {
+        void onEventAdded();
     }
 }

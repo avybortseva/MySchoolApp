@@ -1,6 +1,8 @@
 package we.nstu.registration.Event;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +20,7 @@ import we.nstu.registration.Lesson.Lesson;
 import we.nstu.registration.Lesson.LessonAdapter;
 import we.nstu.registration.Lesson.Schedule;
 import we.nstu.registration.MainActivity;
+import we.nstu.registration.News.NewsFragment;
 import we.nstu.registration.News.SwipeToDeleteCallback;
 import we.nstu.registration.R;
 import we.nstu.registration.User.User;
@@ -29,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class EventsFragment extends Fragment implements EventAdapter.OnItemClickListener
+public class EventsFragment extends Fragment implements EventAdapter.OnItemClickListener, AddEventDialog.OnEventAddedListener
 {
     private FragmentEventsBinding binding;
     private RecyclerView recyclerView;
@@ -100,6 +103,7 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
 
     private void showAddEventDialog() {
         AddEventDialog dialog = new AddEventDialog();
+        dialog.setOnEventsAddedListener(this);
         dialog.show(getChildFragmentManager(), "AddEventDialog");
     }
     @Override
@@ -107,5 +111,13 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
         Intent i = new Intent(requireActivity(), EventFull.class);
         i.putExtra("eventID", event.getEventID());
         startActivity(i);
+    }
+
+    @Override
+    public void onEventAdded() {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, new EventsFragment());
+        fragmentTransaction.commit();
     }
 }

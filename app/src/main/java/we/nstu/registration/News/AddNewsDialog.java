@@ -45,8 +45,14 @@ public class AddNewsDialog extends DialogFragment {
     private List<News> newsList;
     private String email;
     private List<Uri> uriList;
+    private OnNewsAddedListener listener;
+
 
     public AddNewsDialog() {
+    }
+
+    public void setOnNewsAddedListener(OnNewsAddedListener listener) {
+        this.listener = listener;
     }
 
     @Nullable
@@ -115,6 +121,11 @@ public class AddNewsDialog extends DialogFragment {
                                                 imageRef.putFile(uriList.get(i));
                                             }
                                         }
+
+                                        if (listener != null) {
+                                            listener.onNewsAdded();
+                                        }
+
                                     });
 
                         }
@@ -182,4 +193,9 @@ public class AddNewsDialog extends DialogFragment {
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         return dialog;
     }
+
+    public interface OnNewsAddedListener {
+        void onNewsAdded();
+    }
+
 }

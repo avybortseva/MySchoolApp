@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,8 +27,7 @@ import com.google.firebase.firestore.DocumentReference;
 import java.util.Collections;
 import java.util.List;
 
-public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickListener
-{
+public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickListener, AddNewsDialog.OnNewsAddedListener {
     private FragmentNewsBinding binding;
     private NewsAdapter adapter;
     private List<News> newsList;
@@ -113,6 +114,7 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
 
     private void showAddNewsDialog() {
         AddNewsDialog dialog = new AddNewsDialog();
+        dialog.setOnNewsAddedListener(this);
         dialog.show(getActivity().getSupportFragmentManager(), "AddNewsDialog");
     }
 
@@ -123,4 +125,11 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
         startActivity(i);
     }
 
+    @Override
+    public void onNewsAdded() {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, new NewsFragment());
+        fragmentTransaction.commit();
+    }
 }
