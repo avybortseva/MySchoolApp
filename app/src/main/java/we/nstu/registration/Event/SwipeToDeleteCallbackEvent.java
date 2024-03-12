@@ -2,6 +2,8 @@ package we.nstu.registration.Event;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.Toast;
 
@@ -11,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentReference;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import we.nstu.registration.MainActivity;
+import we.nstu.registration.R;
 
 public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
 
@@ -33,6 +37,19 @@ public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
         if (direction == ItemTouchHelper.LEFT || direction == ItemTouchHelper.RIGHT) {
             showConfirmationDialog(viewHolder.itemView, position);
         }
+    }
+
+    @Override
+    public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                .addSwipeLeftActionIcon(R.drawable.delete)
+                .addSwipeRightActionIcon(R.drawable.delete)
+                .addBackgroundColor(Color.RED)
+                .addCornerRadius(5,5)
+                .create()
+                .decorate();
+
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
     private void showConfirmationDialog(View itemView, int position) {

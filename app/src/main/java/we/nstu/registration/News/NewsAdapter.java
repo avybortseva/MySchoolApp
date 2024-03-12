@@ -1,6 +1,9 @@
 package we.nstu.registration.News;
 
 
+import static we.nstu.registration.R.drawable.add_photo;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +62,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         News news = newsList.get(position);
         holder.newsTitle.setText(news.getNewsTitle());
         holder.newsTime.setText(news.getNewsTime());
+
 
         String email = MainActivity.getEmail(holder.imageView.getContext());
 
@@ -126,6 +130,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         newsList.remove(position);
         notifyItemRemoved(position);
     }
+
+
 
 }
 

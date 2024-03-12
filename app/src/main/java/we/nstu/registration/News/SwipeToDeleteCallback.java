@@ -1,9 +1,15 @@
 package we.nstu.registration.News;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,15 +31,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import we.nstu.registration.MainActivity;
 import we.nstu.registration.R;
 import we.nstu.registration.User.User;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
-    private NewsAdapter adapter;
-    private Drawable icon;
-    private Context context;
+    private final NewsAdapter adapter;
+    private final Context context;
 
     public SwipeToDeleteCallback(NewsAdapter adapter, Context context) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -52,6 +58,19 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         if (direction == ItemTouchHelper.LEFT || direction == ItemTouchHelper.RIGHT) {
             showConfirmationDialog(viewHolder.itemView, position);
         }
+    }
+
+    @Override
+    public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                .addSwipeLeftActionIcon(R.drawable.delete)
+                .addSwipeRightActionIcon(R.drawable.delete)
+                .addBackgroundColor(Color.RED)
+                .addCornerRadius(5,5)
+                .create()
+                .decorate();
+
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
     private void showConfirmationDialog(View itemView, int position) {
