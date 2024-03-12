@@ -1,6 +1,7 @@
 package we.nstu.registration.News;
 
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import java.util.List;
 
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> implements ItemTouchHelperAdapter{
+
+
 
     private List<News> newsList;
     private OnItemClickListener listener;
@@ -117,9 +120,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         // Здесь вам нужно будет также удалить элемент из базы данных
         // Например, если у вас есть ссылка на DocumentReference для элемента, вы можете его удалить так:
         // newsList.get(position).getDocumentReference().delete();
-    }
-    public News getItem(int position) {
-        return newsList.get(position);
     }
     @Override
     public void onItemDismiss(int position) {

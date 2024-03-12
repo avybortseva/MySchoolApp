@@ -22,59 +22,42 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:text="Добавление новости"
+            android:text="Добавление сообщения"
             android:textColor="@color/purple"
             android:textSize="22dp"
             android:textStyle="bold" />
     </RelativeLayout>
 
     <EditText
-        android:id="@+id/newsTitleEditText"
+        android:id="@+id/messageTextEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Название новости"
+        android:hint="Текст сообщения"
         android:textColor="@color/black"
         android:inputType="textCapSentences"
         android:layout_margin="10dp"/>
 
     <EditText
-        android:id="@+id/newsDescriptionEditText"
+        android:id="@+id/messageClassEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Описание новости"
+        android:hint="Кому сообщение"
         android:textColor="@color/black"
         android:inputType="textCapSentences"
         android:layout_margin="10dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="10dp"
-        >
 
-        <Button
-            android:id="@+id/addNewsButton"
+
+    <Button
+            android:id="@+id/addMessageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="Добавить"
             android:textSize="15dp"
             android:textColor="@color/white"
-            android:layout_weight="5"
             />
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/add_photo"
-            android:layout_gravity="center"
-            android:background="#00000000"
-            />
-
-
-    </LinearLayout>
 
 
 

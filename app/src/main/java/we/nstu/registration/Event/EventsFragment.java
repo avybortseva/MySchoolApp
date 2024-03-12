@@ -35,7 +35,6 @@ import java.util.List;
 public class EventsFragment extends Fragment implements EventAdapter.OnItemClickListener, AddEventDialog.OnEventAddedListener
 {
     private FragmentEventsBinding binding;
-    private RecyclerView recyclerView;
     private EventAdapter adapter;
     private List<Event> eventList;
 

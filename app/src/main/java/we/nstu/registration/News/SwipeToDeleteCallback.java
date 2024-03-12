@@ -2,11 +2,13 @@ package we.nstu.registration.News;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,11 +26,13 @@ import java.util.Collections;
 import java.util.List;
 
 import we.nstu.registration.MainActivity;
+import we.nstu.registration.R;
 import we.nstu.registration.User.User;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     private NewsAdapter adapter;
+    private Drawable icon;
     private Context context;
 
     public SwipeToDeleteCallback(NewsAdapter adapter, Context context) {

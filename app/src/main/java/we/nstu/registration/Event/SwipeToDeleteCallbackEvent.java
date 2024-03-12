@@ -42,6 +42,7 @@ public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
         builder.setPositiveButton("Да", (dialog, which) -> {
             // Удаление события из Firestore
             deleteEventFromFirestore(itemView.getContext(), position);
+            adapter.notifyItemChanged(position);
         });
         builder.setNegativeButton("Нет", (dialog, which) -> {
             // Отмена удаления

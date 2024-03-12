@@ -1,11 +1,16 @@
 package we.nstu.registration.News;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import we.nstu.registration.MainActivity;
+import we.nstu.registration.R;
 import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.NewsActivityBinding;
 import com.google.firebase.firestore.DocumentReference;
@@ -61,7 +66,16 @@ public class NewsFull extends AppCompatActivity
                 }).addOnFailureListener(e->{
                     Toast.makeText(getApplicationContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
                 });
+        binding.backToNewsFragment.setOnClickListener(v -> {
+            goBackToNewsFragment();
+        });
+    }
 
-
+    private void goBackToNewsFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            finish();
+        }
     }
 }
