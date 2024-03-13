@@ -48,14 +48,13 @@
 
         <ProgressBar
             android:id="@+id/progressBar"
-            android:layout_width="match_parent"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:indeterminateDrawable="@drawable/spinner_ring"
-            android:paddingTop="100dp"
-            android:paddingRight="175dp"
-            android:paddingLeft="175dp"
-            android:paddingBottom="100dp"
             android:visibility="gone"
+
+            android:layout_gravity="center"
+
             android:indeterminateOnly="true"
             android:foregroundGravity="center"
             />

@@ -74,14 +74,14 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
                                         adapter = new EventAdapter(eventList);
                                         adapter.setOnItemClickListener(this);
                                         binding.recyclerView.setAdapter(adapter);
-                                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackEvent(adapter));
+                                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackEvent(adapter, getContext()));
                                         itemTouchHelper.attachToRecyclerView(binding.recyclerView);
 
                                         binding.progressBar.setVisibility(View.GONE);
                                     }
                                     else
                                     {
-                                        Toast.makeText(getContext(), "Новостей нет", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Событий нет", Toast.LENGTH_SHORT).show();
                                         binding.progressBar.setVisibility(View.GONE);
                                     }
                                 })
@@ -102,7 +102,7 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
 
     private void showAddEventDialog() {
         AddEventDialog dialog = new AddEventDialog();
-        dialog.setOnEventsAddedListener(this);
+        dialog.setOnEventsAddedListener(this, getContext());
         dialog.show(getChildFragmentManager(), "AddEventDialog");
     }
     @Override

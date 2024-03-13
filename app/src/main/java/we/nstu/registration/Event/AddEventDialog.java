@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -57,9 +58,11 @@ public class AddEventDialog extends DialogFragment {
     private String eventDate;
     private String eventTime;
     private OnEventAddedListener listener;
+    private Context context;
 
-    public void setOnEventsAddedListener(OnEventAddedListener listener) {
+    public void setOnEventsAddedListener(OnEventAddedListener listener, Context context) {
         this.listener = listener;
+        this.context = context;
     }
 
 
@@ -108,7 +111,12 @@ public class AddEventDialog extends DialogFragment {
                                                 .document(String.valueOf(user.getSchoolID()))
                                                 .collection("classrooms")
                                                 .document(String.valueOf(user.getClassroomID()))
-                                                .update("eventsJson", newEventsJson);
+                                                .update("eventsJson", newEventsJson)
+                                                .addOnSuccessListener(runnable -> {
+
+                                                    Toast.makeText(context, "Событие успешно создано", Toast.LENGTH_SHORT).show();
+
+                                                });
 
                                         FirebaseStorage storage = FirebaseStorage.getInstance();
                                         StorageReference storageRef = storage.getReference();
@@ -138,7 +146,7 @@ public class AddEventDialog extends DialogFragment {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                eventDate =  String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear) + "." + year;
+                eventDate =  String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear + 1) + "." + year;
             }
         };
 

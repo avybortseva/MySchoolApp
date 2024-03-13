@@ -82,12 +82,11 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
             adapter.notifyItemRemoved(position);
         });
         builder.setNegativeButton("Нет", (dialog, which) -> {
-            // Отмена удаления
             adapter.notifyItemChanged(position);
         });
         AlertDialog dialog = builder.create();
-        dialog.setCancelable(true); // Разрешить закрытие диалога при нажатии за пределами диалога
-        dialog.setCanceledOnTouchOutside(false); // Запретить закрытие диалога при свайпе вне диалога
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
 
@@ -119,7 +118,11 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
                             String newsJson = schoolNews.newsToJson();
                             updateNewsJson(user, newsJson, newsID);
                         }
+                        Toast.makeText(context, "Новость успешно удалена", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Не удалось удалить новость", Toast.LENGTH_SHORT).show();
                 });
 
     }
@@ -132,15 +135,12 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         StorageReference storageRef = storage.getReference();
         StorageReference newsRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("News").child(newsID);
 
-        newsRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-            @Override
-            public void onSuccess(ListResult listResult) {
-                List<StorageReference> items = listResult.getItems();
-                List<Task<Void>> deleteTasks = new ArrayList<>();
+        newsRef.listAll().addOnSuccessListener(listResult -> {
+            List<StorageReference> items = listResult.getItems();
+            List<Task<Void>> deleteTasks = new ArrayList<>();
 
-                for (StorageReference item : items) {
-                    deleteTasks.add(item.delete());
-                }
+            for (StorageReference item : items) {
+                deleteTasks.add(item.delete());
             }
         });
     }

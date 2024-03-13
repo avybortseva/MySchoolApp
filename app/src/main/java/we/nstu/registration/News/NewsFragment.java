@@ -114,7 +114,7 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
 
     private void showAddNewsDialog() {
         AddNewsDialog dialog = new AddNewsDialog();
-        dialog.setOnNewsAddedListener(this);
+        dialog.setOnNewsAddedListener(this, getContext());
         dialog.show(getActivity().getSupportFragmentManager(), "AddNewsDialog");
     }
 

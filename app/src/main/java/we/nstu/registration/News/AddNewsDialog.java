@@ -3,6 +3,7 @@ package we.nstu.registration.News;
 import static android.app.Activity.RESULT_OK;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -46,12 +47,14 @@ public class AddNewsDialog extends DialogFragment {
     private String email;
     private List<Uri> uriList;
     private OnNewsAddedListener listener;
+    private Context context;
 
     public AddNewsDialog() {
     }
 
-    public void setOnNewsAddedListener(OnNewsAddedListener listener) {
+    public void setOnNewsAddedListener(OnNewsAddedListener listener, Context context) {
         this.listener = listener;
+        this.context = context;
     }
 
     @Nullable
@@ -106,7 +109,10 @@ public class AddNewsDialog extends DialogFragment {
 
                                         MainActivity.database.collection("schools")
                                                 .document(String.valueOf(user.getSchoolID()))
-                                                .update("newsJson", newNewsJson);
+                                                .update("newsJson", newNewsJson)
+                                                .addOnSuccessListener(runnable -> {
+                                                    Toast.makeText(context, "Новость успешно создана", Toast.LENGTH_SHORT).show();
+                                                });
 
                                         FirebaseStorage storage = FirebaseStorage.getInstance();
                                         StorageReference storageRef = storage.getReference();

@@ -95,26 +95,37 @@
 
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminateDrawable="@drawable/spinner_ring"
 
-            android:paddingTop="100dp"
-            android:paddingBottom="100dp"
-            android:visibility="gone"
-
-            android:indeterminateOnly="true"
-            android:foregroundGravity="center"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            />
+            tools:context=".MainActivity">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:indeterminateDrawable="@drawable/spinner_ring"
+                android:visibility="gone"
+
+                android:layout_gravity="center"
+
+                android:indeterminateOnly="true"
+                android:foregroundGravity="center"
+
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="50dp"
+
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                />
+
+        </FrameLayout>
 
     </LinearLayout>
 

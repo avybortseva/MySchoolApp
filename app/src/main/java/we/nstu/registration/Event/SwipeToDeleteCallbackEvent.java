@@ -11,19 +11,33 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import we.nstu.registration.MainActivity;
+import we.nstu.registration.News.News;
+import we.nstu.registration.News.SchoolNews;
 import we.nstu.registration.R;
+import we.nstu.registration.User.User;
 
 public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
 
-    private EventAdapter adapter;
+    private final EventAdapter adapter;
+    private final Context context;
 
-    public SwipeToDeleteCallbackEvent(EventAdapter adapter) {
+    public SwipeToDeleteCallbackEvent(EventAdapter adapter, Context context) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.adapter = adapter;
+        this.context = context;
     }
 
     @Override
@@ -58,8 +72,8 @@ public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
         builder.setMessage("Вы уверены, что хотите удалить это событие?");
         builder.setPositiveButton("Да", (dialog, which) -> {
             // Удаление события из Firestore
-            deleteEventFromFirestore(itemView.getContext(), position);
-            adapter.notifyItemChanged(position);
+            deleteNewsFromFirestore(position);
+            adapter.notifyItemRemoved(position);
         });
         builder.setNegativeButton("Нет", (dialog, which) -> {
             // Отмена удаления
@@ -71,21 +85,59 @@ public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
         dialog.show();
     }
 
-    private void deleteEventFromFirestore(Context context, int position) {
-        Event event = adapter.getItem(position);
-        // Получить ссылку на документ события из Firestore
-        DocumentReference documentReference = event.getDocumentReference();
-        if (documentReference != null) {
-            documentReference.delete()
-                    .addOnSuccessListener(aVoid -> {
-                        adapter.removeItem(position);
-                        adapter.notifyItemRemoved(position);
-                        Toast.makeText(context, "Событие удалено", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        // Обработка ошибки удаления
-                        Toast.makeText(context, "Ошибка при удалении события: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        }
+    private void deleteNewsFromFirestore(int position) {
+
+        List<Event> eventList = adapter.getEventList();
+        String eventID = eventList.get(position).getEventID();
+        eventList.remove(position);
+
+        Collections.reverse(eventList);
+
+        String email = MainActivity.getEmail(context);
+
+        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+
+        usersReference.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        User user = documentSnapshot.toObject(User.class);
+
+                        SchoolEvent schoolEvent = new SchoolEvent(eventList);
+                        if (eventList.size() == 0)
+                        {
+                            String eventsJson = "";
+                            updateEventsJson(user, eventsJson, eventID);
+                        }
+                        else
+                        {
+                            String eventsJson = schoolEvent.eventToJson();
+                            updateEventsJson(user, eventsJson, eventID);
+                        }
+                        Toast.makeText(context, "Событие успешно удалено",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Не удалось удалить событие", Toast.LENGTH_SHORT).show();
+                });
+
+    }
+
+    private void updateEventsJson(User user, String newEventsJson, String eventID) {
+        DocumentReference schoolDocument = MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID()));
+        schoolDocument.update("eventsJson", newEventsJson);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference newsRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("Events").child(eventID);
+
+        newsRef.listAll().addOnSuccessListener(listResult -> {
+
+            List<StorageReference> items = listResult.getItems();
+            List<Task<Void>> deleteTasks = new ArrayList<>();
+
+            for (StorageReference item : items) {
+                deleteTasks.add(item.delete());
+            }
+        });
     }
 }
