@@ -107,6 +107,7 @@ public class ProfileFragment extends Fragment {
 
         binding.logoutButton.setOnClickListener(v -> {
             MainActivity.clearEmail(getContext());
+            Toast.makeText(getContext(), "Вы успешно вышли из аккаунта", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(requireActivity(), Login.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);

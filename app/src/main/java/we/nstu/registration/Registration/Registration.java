@@ -68,6 +68,7 @@ public class Registration extends AppCompatActivity
                                                                 Toast.makeText(Registration.this, "Вы успешно зарегестрированны", Toast.LENGTH_SHORT).show();
                                                                 MainActivity.saveEmail(getApplicationContext(), user.getEmail());
                                                                 startActivity(new Intent(Registration.this, MainActivity.class));
+                                                                finish();
                                                             })
                                                             .addOnFailureListener(e -> {
                                                                 Toast.makeText(Registration.this, "Ошибка при регистрации", Toast.LENGTH_SHORT).show();

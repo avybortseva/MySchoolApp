@@ -46,6 +46,7 @@ public class Login extends AppCompatActivity {
                                     Toast.makeText(Login.this, "Успешно авторизованы", Toast.LENGTH_SHORT).show();
                                     MainActivity.saveEmail(getApplicationContext(),username);
                                     startActivity(new Intent(Login.this, MainActivity.class));
+                                    finish();
                                 } else {
                                     Toast.makeText(Login.this, "Неверный пароль", Toast.LENGTH_SHORT).show();
                                 }
