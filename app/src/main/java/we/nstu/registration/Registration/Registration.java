@@ -36,7 +36,7 @@ public class Registration extends AppCompatActivity
                     binding.userFirstName.getText().toString(),
                     binding.userSecondName.getText().toString(),
                     binding.userThirdName.getText().toString(),
-                    binding.userEmail.getText().toString(),
+                    binding.userEmail.getText().toString().toLowerCase(),
                     binding.userPassword.getText().toString()
             );
 
@@ -64,16 +64,27 @@ public class Registration extends AppCompatActivity
                                         inviteReference.update(updates)
                                                 .addOnSuccessListener(a->{
                                                     DocumentReference reference = db.collection("users").document(user.getEmail());
-                                                    reference.set(user)
-                                                            .addOnSuccessListener(aVoid -> {
-                                                                Toast.makeText(Registration.this, "Вы успешно зарегестрированны", Toast.LENGTH_SHORT).show();
-                                                                MainActivity.saveEmail(getApplicationContext(), user.getEmail());
-                                                                startActivity(new Intent(Registration.this, MainActivity.class));
-                                                                finish();
-                                                            })
-                                                            .addOnFailureListener(e -> {
-                                                                Toast.makeText(Registration.this, "Ошибка при регистрации", Toast.LENGTH_SHORT).show();
-                                                            });
+
+                                                    reference.get()
+                                                                    .addOnSuccessListener(documentSnapshot1 -> {
+                                                                       if(!documentSnapshot1.exists())
+                                                                       {
+                                                                           reference.set(user)
+                                                                                   .addOnSuccessListener(aVoid -> {
+                                                                                       Toast.makeText(Registration.this, "Вы успешно зарегестрированны", Toast.LENGTH_SHORT).show();
+                                                                                       MainActivity.saveEmail(getApplicationContext(), user.getEmail());
+                                                                                       startActivity(new Intent(Registration.this, MainActivity.class));
+                                                                                       finish();
+                                                                                   })
+                                                                                   .addOnFailureListener(e -> {
+                                                                                       Toast.makeText(Registration.this, "Ошибка при регистрации", Toast.LENGTH_SHORT).show();
+                                                                                   });
+                                                                       }
+                                                                       else
+                                                                       {
+                                                                           Toast.makeText(Registration.this, "Пользователь с такой почтой уже зарегестрирован", Toast.LENGTH_SHORT).show();
+                                                                       }
+                                                                    });
                                                 });
                                     }
                                     else
