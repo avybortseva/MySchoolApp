@@ -9,6 +9,7 @@ public class User
     private String password; //Пароля
     private int schoolID; //ID школы
     private int classroomID; //ID класса
+    private int accessLevel;
 
 
     public boolean checkFields(){
@@ -121,4 +122,33 @@ public class User
     public void setClassroomID(int classroomID) {
         this.classroomID = classroomID;
     }
+
+    public int getAccessLevel() {
+        return accessLevel;
+    }
+
+    public void setAccessLevel(int accessLevel) {
+        this.accessLevel = accessLevel;
+    }
+
+    public String accessLevelToText()
+    {
+        if (accessLevel == 0)
+        {
+            return "Учащийся";
+        }
+        else if (accessLevel == 1)
+        {
+            return "Староста";
+        }
+        else if (accessLevel == 2)
+        {
+            return "Учитель";
+        }
+        else
+        {
+            return "Администратор";
+        }
+    }
+
 }

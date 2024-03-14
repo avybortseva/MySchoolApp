@@ -59,6 +59,11 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                     if (documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
 
+                        if (user.getAccessLevel() != 0)
+                        {
+                            binding.addNewsButton.setVisibility(View.VISIBLE);
+                        }
+
                         MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                                 .addOnSuccessListener(ds -> {
 

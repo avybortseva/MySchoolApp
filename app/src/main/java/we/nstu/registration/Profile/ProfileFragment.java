@@ -3,6 +3,8 @@ package we.nstu.registration.Profile;
 import static android.app.Activity.RESULT_OK;
 
 import androidx.fragment.app.Fragment;
+
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -80,6 +82,8 @@ public class ProfileFragment extends Fragment {
                         User user = documentSnapshot.toObject(User.class);
                         binding.fullName.setText(user.getFirstName() + " " + user.getSecondName() + " " + user.getSurname());
                         binding.email.setText(email);
+                        binding.accessLevel.setText(user.accessLevelToText());
+
 
                         MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                                 .addOnSuccessListener(ds -> {
@@ -119,7 +123,41 @@ public class ProfileFragment extends Fragment {
             startActivityForResult(intent, GALLERY_REQUEST);
         });
 
+        binding.deleteAccount.setOnClickListener(v -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Подтвердите удаление аккаунта");
+            builder.setMessage("Вы уверены, что хотите удалить аккаунт?");
+            builder.setPositiveButton("Да", (dialog, which) -> {
+                deleteAccount();
+            });
+            builder.setNegativeButton("Нет", (dialog, which) -> {
+
+            });
+            AlertDialog dialog = builder.create();
+            dialog.setCancelable(true);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+
+        });
+
         return view;
+    }
+
+    public void deleteAccount()
+    {
+        MainActivity.database.collection("users").document(email).delete()
+                .addOnSuccessListener(runnable -> {
+                    MainActivity.clearEmail(getContext());
+                    Intent i = new Intent(requireActivity(), Login.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                    requireActivity().finishAffinity();
+                    Toast.makeText(getContext(), "Вы успешно удалили аккаунт", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Не удалось удалить аккаунт. Попробуйте позже", Toast.LENGTH_SHORT).show();
+                });
     }
 
 

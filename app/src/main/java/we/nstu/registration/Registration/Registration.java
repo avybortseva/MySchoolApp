@@ -57,6 +57,7 @@ public class Registration extends AppCompatActivity
                                     {
                                         user.setSchoolID(invite.getSchoolID());
                                         user.setClassroomID(invite.getClassroomID());
+                                        user.setAccessLevel(invite.getAccessLevel());
 
                                         Map<String, Object> updates = new HashMap<>();
                                         updates.put("numOfUses", numOfUses);

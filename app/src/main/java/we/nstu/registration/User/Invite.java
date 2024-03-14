@@ -4,14 +4,16 @@ public class Invite {
     private int schoolID;
     private int classroomID;
     private int numOfUses;
+    private int accessLevel;
 
     public Invite() {
     }
 
-    public Invite(int schoolID, int classroomID, int numOfUses) {
+    public Invite(int schoolID, int classroomID, int numOfUses, int accessLevel) {
         this.schoolID = schoolID;
         this.classroomID = classroomID;
         this.numOfUses = numOfUses;
+        this.accessLevel = accessLevel;
     }
 
     public int getSchoolID() {
@@ -36,5 +38,13 @@ public class Invite {
 
     public void setNumOfUses(int numOfUses) {
         this.numOfUses = numOfUses;
+    }
+
+    public int getAccessLevel() {
+        return accessLevel;
+    }
+
+    public void setAccessLevel(int accessLevel) {
+        this.accessLevel = accessLevel;
     }
 }
