@@ -41,6 +41,7 @@ public class ProfileFragment extends Fragment {
     private final int GALLERY_REQUEST = 1;
     private String email;
     private StorageReference usersRef;
+    private StorageReference storageRef;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -61,7 +62,7 @@ public class ProfileFragment extends Fragment {
         email = MainActivity.getEmail(getContext());
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
+        storageRef = storage.getReference();
         usersRef = storageRef.child("Users").child(email);
         StorageReference imageRef = usersRef.child("profile_image.jpg");
         imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
@@ -147,6 +148,10 @@ public class ProfileFragment extends Fragment {
 
     public void deleteAccount()
     {
+
+        //Нужно сделать удаление из списка всех учащихся
+
+
         MainActivity.database.collection("users").document(email).delete()
                 .addOnSuccessListener(runnable -> {
                     MainActivity.clearEmail(getContext());
@@ -159,6 +164,12 @@ public class ProfileFragment extends Fragment {
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Не удалось удалить аккаунт. Попробуйте позже", Toast.LENGTH_SHORT).show();
                 });
+
+        //Удаление картинки
+        usersRef = storageRef.child("Users").child(email);
+        StorageReference imageRef2 = usersRef.child("profile_image.jpg");
+        imageRef2.delete();
+
     }
 
 

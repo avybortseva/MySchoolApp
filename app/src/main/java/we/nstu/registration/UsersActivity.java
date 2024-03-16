@@ -18,7 +18,7 @@ import we.nstu.registration.databinding.ActivityUsersBinding;
 
 public class UsersActivity extends AppCompatActivity {
     private UserAdapter userAdapter;
-    private List<UserRe> userList;
+    private List<User> userList;
     private String email;
     private ActivityUsersBinding binding;
 
@@ -39,7 +39,7 @@ public class UsersActivity extends AppCompatActivity {
                 {
                     User user = documentSnapshot.toObject(User.class);
 
-                    MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
+                    MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                             .addOnSuccessListener(ds -> {
                                 String[] studentsID = ds.get("studentsID").toString().split(" ");
 
@@ -50,7 +50,7 @@ public class UsersActivity extends AppCompatActivity {
                                             .addOnSuccessListener(documentSnapshot1 -> {
                                                 User userToAdd = documentSnapshot1.toObject(User.class);
 
-                                                userList.add(new UserRe(userToAdd.getFirstName() + " " + userToAdd.getSecondName() + " " + userToAdd.getSurname(), userToAdd.accessLevelToText(), ds.get("classroomName").toString(), R.drawable.ic_login_person));
+                                                userList.add(userToAdd);
 
                                                 userAdapter = new UserAdapter(userList);
                                                 binding.recyclerUser.setAdapter(userAdapter);
@@ -66,7 +66,7 @@ public class UsersActivity extends AppCompatActivity {
 
 
         binding.floatingActionButton.setOnClickListener(v -> {
-            startActivity(new Intent(UsersActivity.this, InvitationsCreateActivity.class));
+            startActivity(new Intent(UsersActivity.this, InvitationCreateActivity.class));
         });
     }
 }

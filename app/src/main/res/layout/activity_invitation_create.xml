@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InvitationsCreateActivity">
+    tools:context=".InvitationCreateActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,7 +48,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             >
 
             <TextView
@@ -63,8 +62,32 @@
                 android:id="@+id/classroomName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:hint="11В"
+                android:singleLine="true"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Классный руководитель:"
+                android:padding="10dp"
+                android:textSize="17dp"
+                />
+
+            <EditText
+                android:id="@+id/teatcherFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint=""
+                android:singleLine="true"
                 />
 
         </LinearLayout>

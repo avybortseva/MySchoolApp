@@ -71,14 +71,22 @@ public class Registration extends AppCompatActivity
                                                                     .addOnSuccessListener(documentSnapshot1 -> {
                                                                        if(!documentSnapshot1.exists())
                                                                        {
-                                                                           MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
+                                                                           //Прикрипление учащегося к школе
+                                                                           MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                                                                                    .addOnSuccessListener(ds -> {
                                                                                        String studentsID = ds.get("studentsID").toString();
-                                                                                       studentsID = studentsID + " " + user.getEmail();
-
-                                                                                       MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).update("studentsID", studentsID);
+                                                                                       if (studentsID == "")
+                                                                                       {
+                                                                                           studentsID = user.getEmail();
+                                                                                       }
+                                                                                       else
+                                                                                       {
+                                                                                           studentsID = studentsID + " " + user.getEmail();
+                                                                                       }
+                                                                                       MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).update("studentsID", studentsID);
                                                                                    });
 
+                                                                           //Регестрация юзера
                                                                            reference.set(user)
                                                                                    .addOnSuccessListener(aVoid -> {
                                                                                        Toast.makeText(Registration.this, "Вы успешно зарегестрированны", Toast.LENGTH_SHORT).show();
