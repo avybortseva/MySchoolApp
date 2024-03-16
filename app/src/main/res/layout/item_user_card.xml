@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_schedule_card_drawable"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginBottom="5dp"
+    >
+
+    <ImageView
+        android:id="@+id/photoUser"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_login_person"
+        android:scaleType="centerCrop"
+        android:background="@drawable/circle_message_background" />
+
+    <TextView
+        android:id="@+id/textNameUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/photoUser"
+        android:layout_alignParentTop="true"
+        android:text="ФИО"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textStatusUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/photoUser"
+        android:layout_below="@id/textNameUser"
+        android:text="Статус"/>
+    <TextView
+        android:id="@+id/textClassUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/photoUser"
+        android:layout_below="@id/textStatusUser"
+        android:text="Класс"/>
+
+</RelativeLayout>
