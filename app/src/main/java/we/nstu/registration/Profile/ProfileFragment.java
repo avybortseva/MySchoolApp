@@ -20,6 +20,7 @@ import we.nstu.registration.MainActivity;
 import we.nstu.registration.Registration.Registration;
 import we.nstu.registration.Settings.Settings;
 import we.nstu.registration.User.User;
+import we.nstu.registration.UsersActivity;
 import we.nstu.registration.databinding.FragmentProfileBinding;
 
 import com.bumptech.glide.Glide;
@@ -139,7 +140,7 @@ public class ProfileFragment extends Fragment {
         });
 
         binding.createNewInvitation.setOnClickListener(v -> {
-
+            startActivity(new Intent(getContext(), UsersActivity.class));
         });
 
         return view;
