@@ -62,17 +62,14 @@ public class ProfileFragment extends Fragment {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         usersRef = storageRef.child("Users").child(email);
-
-        if (isAdded()) {
-            StorageReference imageRef = usersRef.child("profile_image.jpg");
-            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                if (isAdded()) {
-                    Glide.with(requireActivity())
-                            .load(uri)
-                            .into(binding.imageView);
-                }
-            });
-        }
+        StorageReference imageRef = usersRef.child("profile_image.jpg");
+        imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            if (isAdded()) {
+                Glide.with(requireActivity())
+                        .load(uri)
+                        .into(binding.imageView);
+            }
+        });
 
         DocumentReference usersReference = MainActivity.database.collection("users").document(email);
 
@@ -138,6 +135,10 @@ public class ProfileFragment extends Fragment {
             dialog.setCancelable(true);
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
+
+        });
+
+        binding.createNewInvitation.setOnClickListener(v -> {
 
         });
 

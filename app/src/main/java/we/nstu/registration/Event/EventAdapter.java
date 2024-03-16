@@ -72,12 +72,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                     }
                 });
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onItemClick(event);
-                }
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(event);
             }
         });
     }

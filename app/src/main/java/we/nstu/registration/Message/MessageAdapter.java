@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import we.nstu.registration.Event.Event;
+import we.nstu.registration.Event.EventAdapter;
 import we.nstu.registration.R;
 
 import java.util.List;
@@ -15,9 +17,18 @@ import java.util.List;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
     private List<Message> messageList;
+    private MessageAdapter.OnItemClickListener listener;
 
     public MessageAdapter(List<Message> messageList) {
         this.messageList = messageList;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Message message);
+    }
+
+    public void setOnItemClickListener(MessageAdapter.OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -33,6 +44,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         holder.imageView.setImageResource(message.getImageResource());
         holder.titleTextView.setText(message.getTitle());
         holder.textTextView.setText(message.getText());
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(message);
+            }
+        });
     }
 
     @Override

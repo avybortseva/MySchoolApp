@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,40 +14,51 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Registration"
-        tools:targetApi="31">
+        tools:targetApi="31" >
         <activity
-            android:name="we.nstu.registration.Event.EventFull"
+            android:name=".UsersActivity"
             android:exported="false" />
         <activity
-            android:name="we.nstu.registration.Settings.Settings"
+            android:name=".InvitationActivity"
+            android:exported="false"
+            android:label="@string/title_activity_invitation"
+            android:theme="@style/Theme.Registration" />
+        <activity
+            android:name=".Event.EventFull"
             android:exported="false" />
         <activity
-            android:name="we.nstu.registration.Profile.ProfileFragment"
+            android:name=".Settings.Settings"
             android:exported="false" />
         <activity
-            android:name="we.nstu.registration.Lesson.ScheduleFragment"
+            android:name=".Profile.ProfileFragment"
             android:exported="false" />
         <activity
-            android:name="we.nstu.registration.Message.MessageFragment"
+            android:name=".Lesson.ScheduleFragment"
             android:exported="false" />
         <activity
-            android:name="we.nstu.registration.Event.EventsFragment"
+            android:name=".Message.MessageFragment"
             android:exported="false" />
         <activity
-            android:name="we.nstu.registration.News.NewsFragment"
+            android:name=".Event.EventsFragment"
             android:exported="false" />
         <activity
-            android:name="we.nstu.registration.Registration.Registration"
+            android:name=".News.NewsFragment"
             android:exported="false" />
         <activity
-            android:name="we.nstu.registration.MainActivity"
+            android:name=".Registration.Registration"
             android:exported="false" />
         <activity
-            android:name="we.nstu.registration.News.NewsFull"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name="we.nstu.registration.Login.Login"
-            android:exported="true">
+            android:name=".News.NewsFull"
+            android:exported="false" />
+        <activity
+            android:name=".Message.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Login.Login"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

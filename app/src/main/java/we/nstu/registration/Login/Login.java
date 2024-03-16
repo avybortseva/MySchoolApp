@@ -33,7 +33,7 @@ public class Login extends AppCompatActivity {
             }
             else
             {
-                String username = binding.username.getText().toString();
+                String username = binding.username.getText().toString().toLowerCase();
                 String password = binding.password.getText().toString();
 
                 DocumentReference reference = MainActivity.database.collection("users").document(username);
