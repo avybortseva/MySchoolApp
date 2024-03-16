@@ -16,16 +16,14 @@
         android:theme="@style/Theme.Registration"
         tools:targetApi="31">
         <activity
+            android:name=".generatedCodeActivity"
+            android:exported="false" />
+        <activity
             android:name=".InvitationsCreateActivity"
             android:exported="false" />
         <activity
             android:name=".UsersActivity"
             android:exported="false" />
-        <activity
-            android:name=".InvitationActivity"
-            android:exported="false"
-            android:label="@string/title_activity_invitation"
-            android:theme="@style/Theme.Registration" />
         <activity
             android:name=".Event.EventFull"
             android:exported="false" />

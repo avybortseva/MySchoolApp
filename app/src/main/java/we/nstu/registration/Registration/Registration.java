@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import we.nstu.registration.Login.Login;
@@ -12,6 +13,7 @@ import we.nstu.registration.User.Invite;
 import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.FragmentRegistrationBinding;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -69,6 +71,14 @@ public class Registration extends AppCompatActivity
                                                                     .addOnSuccessListener(documentSnapshot1 -> {
                                                                        if(!documentSnapshot1.exists())
                                                                        {
+                                                                           MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
+                                                                                   .addOnSuccessListener(ds -> {
+                                                                                       String studentsID = ds.get("studentsID").toString();
+                                                                                       studentsID = studentsID + " " + user.getEmail();
+
+                                                                                       MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).update("studentsID", studentsID);
+                                                                                   });
+
                                                                            reference.set(user)
                                                                                    .addOnSuccessListener(aVoid -> {
                                                                                        Toast.makeText(Registration.this, "Вы успешно зарегестрированны", Toast.LENGTH_SHORT).show();

@@ -73,7 +73,6 @@ public class ProfileFragment extends Fragment {
         });
 
         DocumentReference usersReference = MainActivity.database.collection("users").document(email);
-
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {

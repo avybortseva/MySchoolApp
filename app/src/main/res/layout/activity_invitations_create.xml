@@ -36,6 +36,7 @@
                 />
 
             <EditText
+                android:id="@+id/numOfUses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -46,21 +47,24 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Номер класса:"
+                android:text="Название класса:"
                 android:padding="10dp"
                 android:textSize="17dp"
                 />
 
             <EditText
+                android:id="@+id/classroomName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:hint="30"
+                android:hint="11В"
                 />
 
         </LinearLayout>
@@ -75,7 +79,7 @@
             >
 
             <RadioButton
-                android:id="@+id/radio_red"
+                android:id="@+id/student"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -83,7 +87,7 @@
                 />
 
             <RadioButton
-                android:id="@+id/radio_blue"
+                android:id="@+id/headman"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -91,7 +95,7 @@
                 />
 
             <RadioButton
-                android:id="@+id/radio_green"
+                android:id="@+id/teacher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -99,7 +103,7 @@
                 />
 
             <RadioButton
-                android:id="@+id/radio_gray"
+                android:id="@+id/admin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -109,19 +113,23 @@
         </RadioGroup>
 
         <TextView
+            android:id="@+id/chechCreatedCodes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Посмотреть уже созданные пригашения"
-            android:gravity="center"
+            android:gravity="center|bottom"
             android:paddingTop="10dp"
             android:textColor="@color/black"
+            android:layout_weight="1"
             />
 
         <Button
+            android:id="@+id/createInvitationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foregroundGravity="center"
-            android:layout_margin="10dp"
+            android:padding="15dp"
+            android:layout_margin="20dp"
             android:text="Создать приглашение"
             />
 
