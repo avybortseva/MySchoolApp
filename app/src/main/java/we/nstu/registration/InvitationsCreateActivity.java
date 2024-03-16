@@ -2,9 +2,9 @@ package we.nstu.registration;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import we.nstu.registration.News.AddNewsDialog;
 import we.nstu.registration.databinding.ActivityInvitationsCreateBinding;
 
 public class InvitationsCreateActivity extends AppCompatActivity {
@@ -18,10 +18,7 @@ public class InvitationsCreateActivity extends AppCompatActivity {
         binding = ActivityInvitationsCreateBinding.inflate(getLayoutInflater());
 
         binding.createInvitationButton.setOnClickListener(v -> {
-            CodeDialog dialogFragment = new CodeDialog();
-            dialogFragment.show(getSupportFragmentManager(), "my_dialog");
+            startActivity(new Intent(this, GeneratedCodeActivity.class));
         });
-
-
     }
 }

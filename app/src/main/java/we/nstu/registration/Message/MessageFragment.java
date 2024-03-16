@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import we.nstu.registration.News.NewsFull;
 import we.nstu.registration.R;
 import we.nstu.registration.User.User;
+import we.nstu.registration.UsersActivity;
 import we.nstu.registration.databinding.FragmentMessageBinding;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
         binding.recyclerView.setAdapter(adapter);
 
         binding.addMessageButton.setOnClickListener(v -> {
-
+                startActivity(new Intent(getContext(), MessageActivity.class));
         });
 
         return binding.getRoot();
