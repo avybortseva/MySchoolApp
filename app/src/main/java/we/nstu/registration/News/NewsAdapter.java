@@ -121,9 +121,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     public void removeItem(int position) {
         newsList.remove(position);
         notifyItemRemoved(position);
-        // Здесь вам нужно будет также удалить элемент из базы данных
-        // Например, если у вас есть ссылка на DocumentReference для элемента, вы можете его удалить так:
-        // newsList.get(position).getDocumentReference().delete();
     }
     @Override
     public void onItemDismiss(int position) {

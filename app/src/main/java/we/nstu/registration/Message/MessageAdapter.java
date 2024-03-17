@@ -1,17 +1,37 @@
 package we.nstu.registration.Message;
 
+import static we.nstu.registration.Message.ChatActivity.chatMessageFromJson;
+
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import we.nstu.registration.Event.Event;
 import we.nstu.registration.Event.EventAdapter;
+import we.nstu.registration.Login.Login;
+import we.nstu.registration.MainActivity;
 import we.nstu.registration.R;
+import we.nstu.registration.User.User;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
@@ -41,7 +61,57 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messageList.get(position);
-        holder.imageView.setImageResource(message.getImageResource());
+
+        //Установка ФИО собеседника
+        DocumentReference reference = MainActivity.database.collection("users").document(message.getCompanionEmail());
+        reference.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists())
+                    {
+                        User user = documentSnapshot.toObject(User.class);
+
+                        holder.titleTextView.setText(user.getSecondName() + " " + user.getFirstName() + " " + user.getSurname());
+
+                    }
+                    else
+                    {
+
+                    }
+                });
+
+        // Установка последнего сообщения
+        String chatIndex = getChatIndex(message.getCompanionEmail(), message.getEmail()).replace(".", "_dot_");
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference messageRef = database.getReference("chats").child(chatIndex);
+        messageRef.limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren())
+                {
+                    String messageJson =  ds.getValue(String.class);
+                    ChatMessage chatMessage = chatMessageFromJson(messageJson);
+                    holder.textTextView.setText(chatMessage.getMessageText());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Обработка ошибки
+            }
+        });
+
+        //Установка аватарки
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference usersRef = storageRef.child("Users").child(message.getCompanionEmail());
+        StorageReference imageRef = usersRef.child("profile_image.jpg");
+        imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            Glide.with(holder.itemView)
+                    .load(uri)
+                    .into(holder.imageView);
+        });
+
         holder.titleTextView.setText(message.getTitle());
         holder.textTextView.setText(message.getText());
 
@@ -68,5 +138,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             textTextView = itemView.findViewById(R.id.textTextView);
         }
     }
+
+    public String getChatIndex(String companionEmail, String email)
+    {
+        List<String> interlocutors = new ArrayList<>();
+        interlocutors.add(companionEmail);
+        interlocutors.add(email);
+        Collections.sort(interlocutors);
+        return interlocutors.get(0) + " to " + interlocutors.get(1);
+    }
+
 }
 

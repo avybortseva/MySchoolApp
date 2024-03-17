@@ -1,38 +1,37 @@
-package we.nstu.registration;
+package we.nstu.registration.Message;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.Filter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import we.nstu.registration.MainActivity;
+import we.nstu.registration.News.NewsFull;
 import we.nstu.registration.User.User;
-import we.nstu.registration.databinding.ActivityUsersBinding;
+import we.nstu.registration.databinding.ActivityMessageBinding;
 
-public class UsersActivity extends AppCompatActivity {
-    private UserAdapter userAdapter;
+public class StartNewDialogActivity extends AppCompatActivity implements AddMessageAdapter.OnItemClickListener {
+
+    private ActivityMessageBinding binding;
+    private AddMessageAdapter addMessageAdapter;
     private List<User> userList;
-    private String email;
-    private ActivityUsersBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityUsersBinding.inflate(getLayoutInflater());
+        binding = ActivityMessageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.recyclerUser.setLayoutManager(new LinearLayoutManager(this));
 
         userList = new ArrayList<>();
 
-        email = MainActivity.getEmail(getApplicationContext());
+        String email = MainActivity.getEmail(getApplicationContext());
         DocumentReference usersReference = MainActivity.database.collection("users").document(email);
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot ->
@@ -53,18 +52,40 @@ public class UsersActivity extends AppCompatActivity {
                                                 if(!userToAdd.getEmail().equals(MainActivity.getEmail(getApplicationContext())))
                                                 {
                                                     userList.add(userToAdd);
-                                                    userAdapter = new UserAdapter(userList);
-                                                    binding.recyclerUser.setAdapter(userAdapter);
+                                                    addMessageAdapter = new AddMessageAdapter(userList, this);
+                                                    binding.recyclerUser.setAdapter(addMessageAdapter);
                                                 }
                                             });
                                 }
+
+
+
                             });
+
+                });
+    }
+
+    @Override
+    public void onItemClick(User user) {
+        String email = MainActivity.getEmail(getApplicationContext());
+
+        MainActivity.database.collection("users").document(email).get()
+                .addOnSuccessListener(ds -> {
+                    String dialogs = ds.get("dialogs").toString();
+                    if (dialogs == "")
+                    {
+                        dialogs = user.getEmail();
+                    }
+                    else
+                    {
+                        dialogs = dialogs + " " + user.getEmail();
+                    }
+                    MainActivity.database.collection("users").document(email).update("dialogs", dialogs);
                 });
 
+        Intent i = new Intent(getApplicationContext(), ChatActivity.class);
+        i.putExtra("companionEmail", user.getEmail());
+        startActivity(i);
 
-
-        binding.floatingActionButton.setOnClickListener(v -> {
-            startActivity(new Intent(UsersActivity.this, InvitationCreateActivity.class));
-        });
     }
 }

@@ -27,7 +27,7 @@
             android:label="@string/title_activity_create_code"
             android:theme="@style/Theme.Registration" />
         <activity
-            android:name=".Message.MessageActivity"
+            android:name=".Message.StartNewDialogActivity"
             android:exported="false" />
         <activity
             android:name=".MessageActivity"

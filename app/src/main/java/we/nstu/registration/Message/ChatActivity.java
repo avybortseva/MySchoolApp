@@ -1,6 +1,7 @@
 package we.nstu.registration.Message;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 import we.nstu.registration.MainActivity;
+import we.nstu.registration.News.NewsFull;
 import we.nstu.registration.News.SchoolNews;
 import we.nstu.registration.R;
 import we.nstu.registration.User.User;
@@ -168,10 +170,9 @@ public class ChatActivity extends AppCompatActivity
         return gson.toJson(chatMessage);
     }
 
-    public ChatMessage chatMessageFromJson(String json) {
+    public static ChatMessage chatMessageFromJson(String json) {
         Gson gson = new Gson();
         Type chatMessageType = new TypeToken<ChatMessage>(){}.getType();
         return gson.fromJson(json, chatMessageType);
     }
-
 }

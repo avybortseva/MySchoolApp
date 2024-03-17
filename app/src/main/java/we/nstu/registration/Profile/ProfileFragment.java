@@ -127,7 +127,15 @@ public class ProfileFragment extends Fragment {
             builder.setTitle("Подтвердите удаление аккаунта");
             builder.setMessage("Вы уверены, что хотите удалить аккаунт?");
             builder.setPositiveButton("Да", (dialog, which) -> {
-                deleteAccount();
+
+                DocumentReference usersReference2 = MainActivity.database.collection("users").document(email);
+                usersReference2.get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot.exists()) {
+                                User user = documentSnapshot.toObject(User.class);
+                                deleteAccount(user);
+                            }
+                        });
             });
             builder.setNegativeButton("Нет", (dialog, which) -> {
 
@@ -146,10 +154,17 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    public void deleteAccount()
+    public void deleteAccount(User user)
     {
 
-        //Нужно сделать удаление из списка всех учащихся
+        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
+                .addOnSuccessListener(ds -> {
+                    String studentsID = ds.get("studentsID").toString();
+                    // Удаляем учетную запись пользователя из списка
+                    String updatedStudentsID = studentsID.replace(user.getEmail() + " ", "").replace(" " + user.getEmail(), "");
+                    // Обновляем список почт в базе данных
+                    MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).update("studentsID", updatedStudentsID);
+                });
 
 
         MainActivity.database.collection("users").document(email).delete()

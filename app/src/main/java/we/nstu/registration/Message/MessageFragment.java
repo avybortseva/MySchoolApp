@@ -9,10 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import we.nstu.registration.News.NewsFull;
-import we.nstu.registration.R;
-import we.nstu.registration.User.User;
-import we.nstu.registration.UsersActivity;
+import we.nstu.registration.MainActivity;
 import we.nstu.registration.databinding.FragmentMessageBinding;
 
 import java.util.ArrayList;
@@ -39,9 +36,15 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
         binding = FragmentMessageBinding.inflate(inflater, container, false);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        String email = MainActivity.getEmail(getContext());
+
+
+
+        String companionEmail = "k";
+
         messageList = new ArrayList<>();
-        messageList.add(new Message("Заголовок 1", "Текст сообщения 1", R.drawable.ic_login_person, new User("А", "В", "С", "dimaf29082014@gmail.com")));
-        messageList.add(new Message("Заголовок 2", "Текст сообщения 2", R.drawable.ic_login_person, new User("А", "В", "С", "dimaf29082014@gmail.com")));
+        messageList.add(new Message("Заголовок 1", "Текст сообщения 1", email, companionEmail));
+        messageList.add(new Message("Заголовок 2", "Текст сообщения 2", email, companionEmail));
         // Добавьте другие сообщения в список, если нужно
 
         adapter = new MessageAdapter(messageList);
@@ -49,7 +52,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
         binding.recyclerView.setAdapter(adapter);
 
         binding.addMessageButton.setOnClickListener(v -> {
-                startActivity(new Intent(getContext(), MessageActivity.class));
+                startActivity(new Intent(getContext(), StartNewDialogActivity.class));
         });
 
         return binding.getRoot();
@@ -58,7 +61,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
     @Override
     public void onItemClick(Message message) {
         Intent i = new Intent(requireActivity(), ChatActivity.class);
-        i.putExtra("companionEmail", message.getCompanion().getEmail());
+        i.putExtra("companionEmail", message.getCompanionEmail());
         startActivity(i);
     }
 }

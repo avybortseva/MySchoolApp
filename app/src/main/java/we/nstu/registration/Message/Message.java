@@ -5,14 +5,14 @@ import we.nstu.registration.User.User;
 public class Message {
     private String title;
     private String text;
-    private int imageResource; // Идентификатор ресурса изображения
-    private User companion; //Собеседник
+    private String email;
+    private String companionEmail; //Собеседник
 
-    public Message(String title, String text, int imageResource, User companion) {
+    public Message(String title, String text, String email, String companionEmail) {
         this.title = title;
         this.text = text;
-        this.imageResource = imageResource;
-        this.companion = companion;
+        this.email = email;
+        this.companionEmail = companionEmail;
     }
 
     public String getTitle() {
@@ -31,19 +31,19 @@ public class Message {
         this.text = text;
     }
 
-    public int getImageResource() {
-        return imageResource;
+    public String getEmail() {
+        return email;
     }
 
-    public void setImageResource(int imageResource) {
-        this.imageResource = imageResource;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public User getCompanion() {
-        return companion;
+    public String getCompanionEmail() {
+        return companionEmail;
     }
 
-    public void setCompanion(User companion) {
-        this.companion = companion;
+    public void setCompanionEmail(String companionEmail) {
+        this.companionEmail = companionEmail;
     }
 }

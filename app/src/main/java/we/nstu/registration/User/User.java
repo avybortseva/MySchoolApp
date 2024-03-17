@@ -1,5 +1,10 @@
 package we.nstu.registration.User;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+
 public class User
 {
     private String firstName; //Имя
@@ -10,6 +15,7 @@ public class User
     private int schoolID; //ID школы
     private int classroomID; //ID класса
     private int accessLevel;
+    private String dialogs;
 
 
     public boolean checkFields(){
@@ -72,6 +78,50 @@ public class User
         this.surname = surname;
         this.email = email;
         this.password = password;
+    }
+
+    public String accessLevelToText()
+    {
+        if (accessLevel == 0)
+        {
+            return "Учащийся";
+        }
+        else if (accessLevel == 1)
+        {
+            return "Староста";
+        }
+        else if (accessLevel == 2)
+        {
+            return "Учитель";
+        }
+        else
+        {
+            return "Администратор";
+        }
+    }
+
+    public static String encryptPassword(String password)
+    {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User(String firstName, String secondName, String surname, String email, String password, int schoolID, int classroomID, int accessLevel, String dialogs) {
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
+        this.schoolID = schoolID;
+        this.classroomID = classroomID;
+        this.accessLevel = accessLevel;
+        this.dialogs = dialogs;
     }
 
     public String getFirstName() {
@@ -138,24 +188,11 @@ public class User
         this.accessLevel = accessLevel;
     }
 
-    public String accessLevelToText()
-    {
-        if (accessLevel == 0)
-        {
-            return "Учащийся";
-        }
-        else if (accessLevel == 1)
-        {
-            return "Староста";
-        }
-        else if (accessLevel == 2)
-        {
-            return "Учитель";
-        }
-        else
-        {
-            return "Администратор";
-        }
+    public String getDialogs() {
+        return dialogs;
     }
 
+    public void setDialogs(String dialogs) {
+        this.dialogs = dialogs;
+    }
 }

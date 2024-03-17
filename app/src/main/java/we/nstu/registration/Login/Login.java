@@ -34,10 +34,9 @@ public class Login extends AppCompatActivity {
             else
             {
                 String username = binding.username.getText().toString().toLowerCase();
-                String password = binding.password.getText().toString();
+                String password = User.encryptPassword(binding.password.getText().toString());
 
                 DocumentReference reference = MainActivity.database.collection("users").document(username);
-
                 reference.get()
                         .addOnSuccessListener(documentSnapshot -> {
                             if (documentSnapshot.exists()) {

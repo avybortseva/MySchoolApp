@@ -39,7 +39,7 @@ public class Registration extends AppCompatActivity
                     binding.userSecondName.getText().toString(),
                     binding.userThirdName.getText().toString(),
                     binding.userEmail.getText().toString().toLowerCase(),
-                    binding.userPassword.getText().toString()
+                    User.encryptPassword(binding.userPassword.getText().toString())
             );
 
             if (user.checkFields() && !binding.userCode.getText().toString().isEmpty())
@@ -60,6 +60,7 @@ public class Registration extends AppCompatActivity
                                         user.setSchoolID(invite.getSchoolID());
                                         user.setClassroomID(invite.getClassroomID());
                                         user.setAccessLevel(invite.getAccessLevel());
+                                        user.setDialogs("");
 
                                         Map<String, Object> updates = new HashMap<>();
                                         updates.put("numOfUses", numOfUses);
