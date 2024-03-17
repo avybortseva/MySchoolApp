@@ -1,5 +1,6 @@
 package we.nstu.registration.Registration;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,9 +13,13 @@ import we.nstu.registration.MainActivity;
 import we.nstu.registration.User.Invite;
 import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.FragmentRegistrationBinding;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +66,23 @@ public class Registration extends AppCompatActivity
                                         user.setClassroomID(invite.getClassroomID());
                                         user.setAccessLevel(invite.getAccessLevel());
                                         user.setDialogs("");
+                                        FirebaseMessaging.getInstance().getToken()
+                                                .addOnCompleteListener(new OnCompleteListener<String>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<String> task) {
+                                                        if (!task.isSuccessful()) {
+                                                            user.setNotifyToken("");
+                                                            return;
+                                                        }
+
+                                                        // Get new FCM registration token
+                                                        String token = task.getResult();
+
+                                                        user.setNotifyToken(token);
+                                                    }
+                                                });
+
+
 
                                         Map<String, Object> updates = new HashMap<>();
                                         updates.put("numOfUses", numOfUses);

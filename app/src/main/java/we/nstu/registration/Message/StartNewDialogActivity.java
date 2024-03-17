@@ -65,6 +65,7 @@ public class StartNewDialogActivity extends AppCompatActivity implements AddMess
                 });
     }
 
+
     @Override
     public void onItemClick(User user) {
         String email = MainActivity.getEmail(getApplicationContext());

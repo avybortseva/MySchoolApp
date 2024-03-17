@@ -91,6 +91,7 @@ public class ChatActivity extends AppCompatActivity
 
                         chatMessages.add(chatMessage);
                     }
+                    chatMessages.remove(0);
                     chatAdapter.notifyDataSetChanged();
                 });
 

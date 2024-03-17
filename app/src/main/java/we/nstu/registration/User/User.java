@@ -16,6 +16,7 @@ public class User
     private int classroomID; //ID класса
     private int accessLevel;
     private String dialogs;
+    private String notifyToken;
 
 
     public boolean checkFields(){
@@ -194,5 +195,13 @@ public class User
 
     public void setDialogs(String dialogs) {
         this.dialogs = dialogs;
+    }
+
+    public String getNotifyToken() {
+        return notifyToken;
+    }
+
+    public void setNotifyToken(String notifyToken) {
+        this.notifyToken = notifyToken;
     }
 }

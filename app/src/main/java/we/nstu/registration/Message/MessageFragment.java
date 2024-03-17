@@ -4,12 +4,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.firebase.firestore.DocumentReference;
 
 import we.nstu.registration.MainActivity;
+import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.FragmentMessageBinding;
 
 import java.util.ArrayList;
@@ -37,19 +43,42 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         String email = MainActivity.getEmail(getContext());
-
-
-
-        String companionEmail = "k";
-
         messageList = new ArrayList<>();
-        messageList.add(new Message("Заголовок 1", "Текст сообщения 1", email, companionEmail));
-        messageList.add(new Message("Заголовок 2", "Текст сообщения 2", email, companionEmail));
-        // Добавьте другие сообщения в список, если нужно
 
-        adapter = new MessageAdapter(messageList);
-        adapter.setOnItemClickListener(this);
-        binding.recyclerView.setAdapter(adapter);
+        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+        usersReference.get()
+                .addOnSuccessListener(documentSnapshot ->
+                {
+                    User user = documentSnapshot.toObject(User.class);
+
+                    if(documentSnapshot.get("dialogs") == "")
+                    {
+                        Toast.makeText(getContext(), "Нет диалогов", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        String[] dialogs = documentSnapshot.get("dialogs").toString().split(" ");
+
+                        for (int i = 0; i < dialogs.length; i++)
+                        {
+                            MainActivity.database.collection("users").document(dialogs[i])
+                                    .get()
+                                    .addOnSuccessListener(documentSnapshot1 -> {
+                                        User userToAdd = documentSnapshot1.toObject(User.class);
+
+                                        if(!userToAdd.getEmail().equals(email))
+                                        {
+                                            messageList.add(new Message("ФИО", "Последнее сообщение", email, userToAdd.getEmail()));
+                                            adapter = new MessageAdapter(messageList);
+                                            adapter.setOnItemClickListener(this);
+                                            binding.recyclerView.setAdapter(adapter);
+                                        }
+                                    });
+                        }
+                    }
+
+                });
+
 
         binding.addMessageButton.setOnClickListener(v -> {
                 startActivity(new Intent(getContext(), StartNewDialogActivity.class));
