@@ -14,9 +14,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dp"
-        android:text="Сгенерированный код"
+        android:text="@string/generated_code"
         android:textColor="@color/purple"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:textStyle="bold"
         />
 
@@ -31,11 +31,11 @@
             android:id="@+id/code"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="421412"
-            android:textSize="40dp"
+            android:text="@string/sample_code"
+            android:textSize="40sp"
             android:padding="10dp"
             android:textStyle="bold"
-            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:textColor="@color/black"
             />
 

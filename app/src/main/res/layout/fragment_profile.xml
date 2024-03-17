@@ -9,7 +9,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,8 +26,8 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Настройки профиля"
-                android:textSize="24dp"
+                android:text="@string/settings"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"/>
 
@@ -35,11 +35,10 @@
                 android:id="@+id/logoutButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Выйти"
+                android:text="@string/logout"
                 android:textColor="@color/purple"
-                android:layout_alignParentRight="true"
                 android:textStyle="normal"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:background="@android:color/transparent"/>
 
         </LinearLayout>
@@ -64,7 +63,6 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#3333ff"
-        android:layout_below="@+id/linear_ll"
         android:paddingRight="8dp"
         android:paddingLeft="8dp"
         />
@@ -98,9 +96,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Имя Фамилия"
+            android:text="@string/fname_lname"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <View
@@ -127,20 +125,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Куратор"
+            android:layout_marginStart="5dp"
+            android:text="@string/tutor"
             android:textColor="@android:color/black"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/teatcherFullName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="55dp"
-            android:text="Имя Фамилия Отчество"
+            android:layout_marginStart="55dp"
+            android:text="@string/FIO"
             android:textColor="@android:color/darker_gray"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -168,20 +166,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Группа"
+            android:layout_marginStart="5dp"
+            android:text="@string/group"
             android:textColor="@android:color/black"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/classNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:text="Номер класса"
+            android:layout_marginStart="70dp"
+            android:text="@string/class_number"
             android:textColor="@android:color/darker_gray"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -209,20 +207,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Школа"
+            android:layout_marginStart="5dp"
+            android:text="@string/school"
             android:textColor="@android:color/black"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/schoolName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:text="Название школы"
+            android:layout_marginStart="70dp"
+            android:text="@string/name_school"
             android:textColor="@android:color/darker_gray"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -250,20 +248,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Почта"
+            android:layout_marginStart="5dp"
+            android:text="@string/mail"
             android:textColor="@android:color/black"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="76dp"
-            android:text="person_email@mail.ru"
+            android:layout_marginStart="76dp"
+            android:text="@string/simple_mail"
             android:textColor="@android:color/darker_gray"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -291,20 +289,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Статус"
+            android:layout_marginStart="5dp"
+            android:text="@string/status"
             android:textColor="@android:color/black"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/accessLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:text="Статус"
+            android:layout_marginStart="70dp"
+            android:text="@string/simple_status"
             android:textColor="@android:color/darker_gray"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
             <View
@@ -318,11 +316,10 @@
         android:id="@+id/createNewInvitation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Управление пользователями"
+        android:text="@string/user_management"
         android:textColor="@color/purple"
-        android:layout_alignParentRight="true"
         android:textStyle="normal"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:paddingTop="10dp"
         android:background="@android:color/transparent"/>
 
@@ -334,10 +331,9 @@
         android:id="@+id/deleteAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Удалить аккаунт"
-        android:layout_alignParentRight="true"
+        android:text="@string/delete_account"
         android:textColor="@color/red"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:paddingTop="50dp"
         android:background="@android:color/transparent"
         android:textStyle="normal" />

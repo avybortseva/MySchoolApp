@@ -18,33 +18,34 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:src="@drawable/ic_login_person"
         android:scaleType="centerCrop"
-        android:background="@drawable/circle_message_background" />
+        android:background="@drawable/circle_background"
+        android:clipToOutline="true" />
 
     <TextView
         android:id="@+id/textNameUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/photoUser"
+        android:layout_toEndOf="@id/photoUser"
         android:layout_alignParentTop="true"
-        android:text="ФИО"
+        android:text="@string/FIO"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textClassUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/photoUser"
+        android:layout_toEndOf="@id/photoUser"
         android:layout_below="@id/textNameUser"
-        android:text="Класс"/>
+        android:text="@string/group"/>
     <TextView
         android:id="@+id/textStatusUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/photoUser"
+        android:layout_toEndOf="@id/photoUser"
         android:layout_below="@id/textClassUser"
-        android:text="Статус"/>
+        android:text="@string/status"/>
 
 </RelativeLayout>

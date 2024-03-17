@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,6 +16,8 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/profile"
+            android:background="@drawable/circle_background"
+            android:clipToOutline="true"
             android:layout_margin="5dp"
 
             />
@@ -32,7 +34,7 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Подолян Е.В."
+                android:text="@string/name_teacher"
                 android:gravity="left"
                 android:textColor="@color/black"
                 />
@@ -42,7 +44,7 @@
                 android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Сообщение"
+                android:text="@string/simple_message"
                 android:textColor="@color/black"
                 />
 
@@ -51,7 +53,7 @@
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="13:14"
+                android:text="@string/simple_data"
                 android:gravity="right"
                 android:textColor="@color/black"
                 />
@@ -60,4 +62,4 @@
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

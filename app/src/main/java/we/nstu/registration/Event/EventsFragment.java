@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class EventsFragment extends Fragment implements EventAdapter.OnItemClickListener, AddEventDialog.OnEventAddedListener
+public class EventsFragment extends Fragment implements  AddEventDialog.OnEventAddedListener
 {
     private FragmentEventsBinding binding;
     private EventAdapter adapter;
@@ -78,7 +78,7 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
                                         Collections.reverse(eventList);
 
                                         adapter = new EventAdapter(eventList);
-                                        adapter.setOnItemClickListener(this);
+
                                         binding.recyclerView.setAdapter(adapter);
                                         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackEvent(adapter, getContext()));
                                         itemTouchHelper.attachToRecyclerView(binding.recyclerView);
@@ -111,12 +111,7 @@ public class EventsFragment extends Fragment implements EventAdapter.OnItemClick
         dialog.setOnEventsAddedListener(this, getContext());
         dialog.show(getChildFragmentManager(), "AddEventDialog");
     }
-    @Override
-    public void onItemClick(Event event) {
-        Intent i = new Intent(requireActivity(), EventFull.class);
-        i.putExtra("eventID", event.getEventID());
-        startActivity(i);
-    }
+
 
     @Override
     public void onEventAdded() {

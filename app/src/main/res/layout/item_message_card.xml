@@ -18,26 +18,27 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:src="@drawable/ic_login_person"
         android:scaleType="centerCrop"
-        android:background="@drawable/circle_message_background" />
+        android:background="@drawable/circle_background"
+        android:clipToOutline="true" />
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imageView"
+        android:layout_toEndOf="@id/imageView"
         android:layout_alignParentTop="true"
-        android:text="Название"
+        android:text="@string/name"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imageView"
+        android:layout_toEndOf="@id/imageView"
         android:layout_below="@id/titleTextView"
-        android:text="Текст сообщения" />
+        android:text="@string/text_messages" />
 
 </RelativeLayout>
