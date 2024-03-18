@@ -9,7 +9,10 @@ import android.os.Bundle;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import we.nstu.registration.MainActivity;
 import we.nstu.registration.News.NewsFull;
@@ -73,20 +76,35 @@ public class StartNewDialogActivity extends AppCompatActivity implements AddMess
         MainActivity.database.collection("users").document(email).get()
                 .addOnSuccessListener(ds -> {
                     String dialogs = ds.get("dialogs").toString();
-                    if (dialogs == "")
-                    {
+                    if (dialogs.isEmpty()) {
                         dialogs = user.getEmail();
+                    } else {
+                        dialogs = user.getEmail() + " " + dialogs;
+                        String[] dialogsArray = dialogs.split(" ");
+                        Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
+                        dialogs = String.join(" ", dialogsSet);
                     }
-                    else
-                    {
-                        dialogs = dialogs + " " + user.getEmail();
-                    }
+
                     MainActivity.database.collection("users").document(email).update("dialogs", dialogs);
+                });
+
+        MainActivity.database.collection("users").document(user.getEmail()).get()
+                .addOnSuccessListener(ds -> {
+                    String dialogs = ds.get("dialogs").toString();
+                    if (dialogs.isEmpty()) {
+                        dialogs = email;
+                    } else {
+                        dialogs = email + " " + dialogs;
+                        String[] dialogsArray = dialogs.split(" ");
+                        Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
+                        dialogs = String.join(" ", dialogsSet);
+                    }
+
+                    MainActivity.database.collection("users").document(user.getEmail()).update("dialogs", dialogs);
                 });
 
         Intent i = new Intent(getApplicationContext(), ChatActivity.class);
         i.putExtra("companionEmail", user.getEmail());
         startActivity(i);
-
     }
 }

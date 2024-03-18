@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,8 +34,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import we.nstu.registration.MainActivity;
 import we.nstu.registration.News.NewsFull;
@@ -91,7 +95,12 @@ public class ChatActivity extends AppCompatActivity
 
                         chatMessages.add(chatMessage);
                     }
-                    chatMessages.remove(0);
+
+                    if (chatMessages.size() != 0)
+                    {
+                        chatMessages.remove(0);
+                    }
+
                     chatAdapter.notifyDataSetChanged();
                 });
 
@@ -126,8 +135,9 @@ public class ChatActivity extends AppCompatActivity
 
         binding.messageSendButton.setOnClickListener(v -> {
             String messageText = binding.messageField.getText().toString();
+            String email = MainActivity.getEmail(getApplicationContext());
 
-            ChatMessage chatMessage = new ChatMessage(MainActivity.getEmail(getApplicationContext()), companionEmail, messageText, getCurrentTime(), false);
+            ChatMessage chatMessage = new ChatMessage(email, companionEmail, messageText, getCurrentTime(), false);
 
             if (!messageText.isEmpty()) {
                 DatabaseReference myRef = database.getReference("chats").child(chatIndex).push();
@@ -137,6 +147,43 @@ public class ChatActivity extends AppCompatActivity
 
                 InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(binding.messageField.getWindowToken(), 0);
+
+                MainActivity.database.collection("users").document(email).get()
+                        .addOnSuccessListener(ds -> {
+
+                            String dialogs = ds.get("dialogs").toString();
+                            if (dialogs.isEmpty()) {
+                                dialogs = companionEmail;
+                            } else {
+                                dialogs = companionEmail + " " + dialogs;
+                                String[] dialogsArray = dialogs.split(" ");
+                                Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
+                                dialogs = String.join(" ", dialogsSet);
+                            }
+
+                            MainActivity.database.collection("users").document(email).update("dialogs", dialogs);
+                        });
+
+                MainActivity.database.collection("users").document(companionEmail).get()
+                        .addOnSuccessListener(ds -> {
+
+                            String dialogs = ds.get("dialogs").toString();
+                            if (dialogs.isEmpty()) {
+                                dialogs = email;
+                            } else {
+                                dialogs = email + " " + dialogs;
+                                String[] dialogsArray = dialogs.split(" ");
+                                Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
+                                dialogs = String.join(" ", dialogsSet);
+                            }
+
+                            MainActivity.database.collection("users").document(companionEmail).update("dialogs", dialogs);
+                        });
+
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Введите сообщение", Toast.LENGTH_SHORT).show();
             }
         });
 
