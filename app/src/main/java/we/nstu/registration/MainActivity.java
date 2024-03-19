@@ -10,6 +10,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
+
 import we.nstu.registration.databinding.ActivityMainBinding;
 
 import we.nstu.registration.Event.EventsFragment;
@@ -21,15 +24,30 @@ import we.nstu.registration.Profile.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
     public static FirebaseFirestore database = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        we.nstu.registration.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new NewsFragment());
+
+        String currentFragment = getCurrentFragment();
+        if (currentFragment != null) {
+            if (currentFragment.equals("NewsFragment")) {
+                replaceFragment(new NewsFragment());
+            } else if (currentFragment.equals("EventsFragment")) {
+                replaceFragment(new EventsFragment());
+            } else if (currentFragment.equals("MessageFragment")) {
+                replaceFragment(new MessageFragment());
+            } else if (currentFragment.equals("ScheduleFragment")) {
+                replaceFragment(new ScheduleFragment());
+            } else if (currentFragment.equals("ProfileFragment")) {
+                replaceFragment(new ProfileFragment());
+            }
+        } else {
+            replaceFragment(new NewsFragment());
+        }
 
         binding.navigationBar.setOnItemSelectedListener(item -> {
 
@@ -46,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.profile) {
                 replaceFragment(new ProfileFragment());
             }
-
+            saveCurrentFragment(Objects.requireNonNull(item.getTitle()).toString());
             return true;
         });
     }
@@ -77,6 +95,16 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    private void saveCurrentFragment(String fragmentName) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("currentFragment", fragmentName);
+        editor.apply();
+    }
+    private String getCurrentFragment() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
+        return sharedPreferences.getString("currentFragment", null);
+    }
 }
 
 
