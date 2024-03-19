@@ -47,24 +47,6 @@
             android:name=".Event.EventFull"
             android:exported="false" />
         <activity
-            android:name=".Settings.Settings"
-            android:exported="false" />
-        <activity
-            android:name=".Profile.ProfileFragment"
-            android:exported="false" />
-        <activity
-            android:name=".Lesson.ScheduleFragment"
-            android:exported="false" />
-        <activity
-            android:name=".Message.MessageFragment"
-            android:exported="false" />
-        <activity
-            android:name=".Event.EventsFragment"
-            android:exported="false" />
-        <activity
-            android:name=".News.NewsFragment"
-            android:exported="false" />
-        <activity
             android:name=".Registration.Registration"
             android:exported="false" />
         <activity
