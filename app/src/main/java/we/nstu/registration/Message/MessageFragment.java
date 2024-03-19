@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import we.nstu.registration.MainActivity;
 import we.nstu.registration.User.User;
@@ -28,6 +29,8 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
     private MessageAdapter adapter;
     private List<Message> messageList;
 
+    private FirebaseFirestore database;
+
     public MessageFragment() {
         // Required empty public constructor
     }
@@ -42,10 +45,12 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
         binding = FragmentMessageBinding.inflate(inflater, container, false);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        database = FirebaseFirestore.getInstance();
+
         String email = MainActivity.getEmail(getContext());
         messageList = new ArrayList<>();
 
-        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+        DocumentReference usersReference = database.collection("users").document(email);
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot ->
                 {
@@ -61,7 +66,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
 
                         for (int i = 0; i < dialogs.length; i++)
                         {
-                            MainActivity.database.collection("users").document(dialogs[i])
+                            database.collection("users").document(dialogs[i])
                                     .get()
                                     .addOnSuccessListener(documentSnapshot1 -> {
                                         User userToAdd = documentSnapshot1.toObject(User.class);

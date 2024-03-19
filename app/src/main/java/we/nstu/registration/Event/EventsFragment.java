@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import we.nstu.registration.Lesson.Lesson;
 import we.nstu.registration.Lesson.LessonAdapter;
@@ -37,6 +38,7 @@ public class EventsFragment extends Fragment implements  AddEventDialog.OnEventA
     private FragmentEventsBinding binding;
     private EventAdapter adapter;
     private List<Event> eventList;
+    private FirebaseFirestore database;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -51,11 +53,13 @@ public class EventsFragment extends Fragment implements  AddEventDialog.OnEventA
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         binding = FragmentEventsBinding.inflate(inflater, container, false);
 
+        database = FirebaseFirestore.getInstance();
+
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         binding.progressBar.setVisibility(View.VISIBLE);
 
-        DocumentReference usersReference = MainActivity.database.collection("users").document(MainActivity.getEmail(getContext()));
+        DocumentReference usersReference = database.collection("users").document(MainActivity.getEmail(getContext()));
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -66,7 +70,7 @@ public class EventsFragment extends Fragment implements  AddEventDialog.OnEventA
                             binding.addEventButton.setVisibility(View.VISIBLE);
                         }
 
-                        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
+                        database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
                                 .addOnSuccessListener(ds -> {
                                     String eventsJson = ds.get("eventsJson").toString();
 
@@ -87,18 +91,25 @@ public class EventsFragment extends Fragment implements  AddEventDialog.OnEventA
                                     }
                                     else
                                     {
-                                        Toast.makeText(getContext(), "Событий нет", Toast.LENGTH_SHORT).show();
+                                        if(getContext() != null) {
+                                            Toast.makeText(getContext(), "Событий нет", Toast.LENGTH_SHORT).show();
+                                        }
                                         binding.progressBar.setVisibility(View.GONE);
                                     }
                                 })
                                 .addOnFailureListener(e -> {
-                                    Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
+                                    if(getContext() != null)
+                                    {
+                                        Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
+                                    }
                                     binding.progressBar.setVisibility(View.GONE);
                                 });
 
                     }
                 }).addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
+                    if(getContext() != null) {
+                        Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
+                    }
                 });
 
         binding.addEventButton.setOnClickListener(v -> showAddEventDialog());

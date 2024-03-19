@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
@@ -54,7 +55,8 @@ public class ChatActivity extends AppCompatActivity
     private ChatAdapter chatAdapter;
     private List<ChatMessage> chatMessages;
     private ChatActivityBinding binding;
-    private FirebaseDatabase database;
+    private FirebaseDatabase databaseRealtime;
+    private FirebaseFirestore database;
     private String chatIndex;
     private String companionEmail;
     private StorageReference usersRef;
@@ -65,12 +67,13 @@ public class ChatActivity extends AppCompatActivity
         binding = ChatActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        database = FirebaseDatabase.getInstance();
+        database = FirebaseFirestore.getInstance();
+        databaseRealtime = FirebaseDatabase.getInstance();
 
         companionEmail = getIntent().getStringExtra("companionEmail");
         chatIndex = getChatIndex(companionEmail).replace(".", "_dot_");
 
-        DocumentReference usersReference = MainActivity.database.collection("users").document(companionEmail);
+        DocumentReference usersReference = database.collection("users").document(companionEmail);
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     User user = documentSnapshot.toObject(User.class);
@@ -84,7 +87,7 @@ public class ChatActivity extends AppCompatActivity
         chatAdapter = new ChatAdapter(chatMessages);
         binding.recyclerView.setAdapter(chatAdapter);
 
-        DatabaseReference reference = database.getReference("chats").child(chatIndex);
+        DatabaseReference reference = databaseRealtime.getReference("chats").child(chatIndex);
         reference.get()
                 .addOnSuccessListener(dataSnapshot -> {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -99,6 +102,12 @@ public class ChatActivity extends AppCompatActivity
                     if (chatMessages.size() != 0)
                     {
                         chatMessages.remove(0);
+
+                        if(chatMessages.size() > 5)
+                        {
+                            binding.recyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+                        }
+
                     }
 
                     chatAdapter.notifyDataSetChanged();
@@ -114,7 +123,7 @@ public class ChatActivity extends AppCompatActivity
                     .into(binding.avatar);
         });
 
-        DatabaseReference chatRef = database.getReference("chats").child(chatIndex);
+        DatabaseReference chatRef = databaseRealtime.getReference("chats").child(chatIndex);
         Query lastItemQuery = chatRef.limitToLast(1);
         lastItemQuery.addValueEventListener(new ValueEventListener() {
             @Override
@@ -123,8 +132,14 @@ public class ChatActivity extends AppCompatActivity
                     String messageJson =  ds.getValue(String.class);
                     ChatMessage chatMessage = chatMessageFromJson(messageJson);
                     chatMessages.add(chatMessage);
-                    chatAdapter.notifyDataSetChanged();
                 }
+                chatAdapter.notifyDataSetChanged();
+
+                if (chatMessages.size() > 5)
+                {
+                    binding.recyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+                }
+
             }
 
             @Override
@@ -140,7 +155,7 @@ public class ChatActivity extends AppCompatActivity
             ChatMessage chatMessage = new ChatMessage(email, companionEmail, messageText, getCurrentTime(), false);
 
             if (!messageText.isEmpty()) {
-                DatabaseReference myRef = database.getReference("chats").child(chatIndex).push();
+                DatabaseReference myRef = databaseRealtime.getReference("chats").child(chatIndex).push();
                 myRef.setValue(chatMessageToJson(chatMessage));
 
                 binding.messageField.setText("");
@@ -148,7 +163,7 @@ public class ChatActivity extends AppCompatActivity
                 InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(binding.messageField.getWindowToken(), 0);
 
-                MainActivity.database.collection("users").document(email).get()
+                database.collection("users").document(email).get()
                         .addOnSuccessListener(ds -> {
 
                             String dialogs = ds.get("dialogs").toString();
@@ -161,10 +176,10 @@ public class ChatActivity extends AppCompatActivity
                                 dialogs = String.join(" ", dialogsSet);
                             }
 
-                            MainActivity.database.collection("users").document(email).update("dialogs", dialogs);
+                            database.collection("users").document(email).update("dialogs", dialogs);
                         });
 
-                MainActivity.database.collection("users").document(companionEmail).get()
+                database.collection("users").document(companionEmail).get()
                         .addOnSuccessListener(ds -> {
 
                             String dialogs = ds.get("dialogs").toString();
@@ -177,7 +192,7 @@ public class ChatActivity extends AppCompatActivity
                                 dialogs = String.join(" ", dialogsSet);
                             }
 
-                            MainActivity.database.collection("users").document(companionEmail).update("dialogs", dialogs);
+                            database.collection("users").document(companionEmail).update("dialogs", dialogs);
                         });
 
             }

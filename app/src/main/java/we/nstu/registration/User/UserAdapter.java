@@ -1,27 +1,28 @@
-package we.nstu.registration;
+package we.nstu.registration.User;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-import we.nstu.registration.User.User;
+import we.nstu.registration.MainActivity;
+import we.nstu.registration.R;
 
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private List<User> userList;
+    private FirebaseFirestore database;
 
     public UserAdapter(List<User> userList)
     {
@@ -36,12 +37,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
+
+        database = FirebaseFirestore.getInstance();
+
         User user = userList.get(position);
         holder.textNameUser.setText(user.getFirstName() + " " + user.getSecondName() + " " + user.getSurname());
         holder.textStatusUser.setText(user.accessLevelToText());
 
         //Установка имени школьного класса
-        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
+        database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
                 .addOnSuccessListener(ds -> {
                     holder.textClassUser.setText(ds.get("classroomName").toString());
                 });

@@ -95,7 +95,7 @@ public class Registration extends AppCompatActivity
                                                                        if(!documentSnapshot1.exists())
                                                                        {
                                                                            //Прикрипление учащегося к школе
-                                                                           MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
+                                                                           db.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                                                                                    .addOnSuccessListener(ds -> {
                                                                                        String studentsID = ds.get("studentsID").toString();
                                                                                        if (studentsID == "")
@@ -106,7 +106,7 @@ public class Registration extends AppCompatActivity
                                                                                        {
                                                                                            studentsID = studentsID + " " + user.getEmail();
                                                                                        }
-                                                                                       MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).update("studentsID", studentsID);
+                                                                                       db.collection("schools").document(String.valueOf(user.getSchoolID())).update("studentsID", studentsID);
                                                                                    });
 
                                                                            //Регестрация юзера

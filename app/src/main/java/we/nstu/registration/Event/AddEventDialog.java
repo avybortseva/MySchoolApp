@@ -27,7 +27,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.firebase.Firebase;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -59,6 +61,7 @@ public class AddEventDialog extends DialogFragment {
     private String eventTime;
     private OnEventAddedListener listener;
     private Context context;
+    private FirebaseFirestore database;
 
     public void setOnEventsAddedListener(OnEventAddedListener listener, Context context) {
         this.listener = listener;
@@ -71,6 +74,8 @@ public class AddEventDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DialogAddEventBinding.inflate(inflater, container, false);
 
+        database = FirebaseFirestore.getInstance();
+
         binding.addEventButton.setOnClickListener(v -> {
 
             if (eventDate == null || eventTime == null || binding.eventTitleEditText.getText().toString() == "" || binding.eventDescriptionEditText.getText().toString() == "")
@@ -80,14 +85,14 @@ public class AddEventDialog extends DialogFragment {
 
             email = MainActivity.getEmail(getContext());
 
-            DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+            DocumentReference usersReference = database.collection("users").document(email);
 
             usersReference.get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
                             User user = documentSnapshot.toObject(User.class);
 
-                            MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
+                            database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
                                     .addOnSuccessListener(ds -> {
 
                                         String eventsJson = ds.get("eventsJson").toString();
@@ -107,7 +112,7 @@ public class AddEventDialog extends DialogFragment {
                                         SchoolEvent newSchoolEvent = new SchoolEvent(eventList);
                                         String newEventsJson = newSchoolEvent.eventToJson();
 
-                                        MainActivity.database.collection("schools")
+                                        database.collection("schools")
                                                 .document(String.valueOf(user.getSchoolID()))
                                                 .collection("classrooms")
                                                 .document(String.valueOf(user.getClassroomID()))

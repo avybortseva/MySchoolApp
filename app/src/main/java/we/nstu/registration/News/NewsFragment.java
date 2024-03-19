@@ -23,6 +23,7 @@ import we.nstu.registration.databinding.FragmentNewsBinding;
 import we.nstu.registration.databinding.FragmentScheduleBinding;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +32,7 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
     private FragmentNewsBinding binding;
     private NewsAdapter adapter;
     private List<News> newsList;
+    private FirebaseFirestore database;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -44,6 +46,8 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        database = FirebaseFirestore.getInstance();
+
         binding = FragmentNewsBinding.inflate(inflater, container, false);
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -52,7 +56,7 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
 
         String email = MainActivity.getEmail(getContext());
 
-        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+        DocumentReference usersReference = database.collection("users").document(email);
 
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -64,14 +68,17 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                             binding.addNewsButton.setVisibility(View.VISIBLE);
                         }
 
-                        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
+                        database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                                 .addOnSuccessListener(ds -> {
 
                                     String newsJson = ds.get("newsJson").toString();
 
                                     if (newsJson == "")
                                     {
-                                        Toast.makeText(getContext(), "Новостей нет", Toast.LENGTH_SHORT).show();
+                                        if (getContext() != null)
+                                        {
+                                            Toast.makeText(getContext(), "Новостей нет", Toast.LENGTH_SHORT).show();
+                                        }
                                         binding.progressBar.setVisibility(View.GONE);
                                     }
                                     else
@@ -101,13 +108,20 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                                     }
                                 })
                                 .addOnFailureListener(e -> {
-                                    Toast.makeText(getContext(), "Ошибка при загрузке новостей", Toast.LENGTH_SHORT).show();
+                                    if (getContext() != null)
+                                    {
+                                        Toast.makeText(getContext(), "Ошибка при загрузке новостей", Toast.LENGTH_SHORT).show();
+                                    }
                                     binding.progressBar.setVisibility(View.GONE);
                                 });
 
                     }
                 }).addOnFailureListener(e->{
-                    Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
+                    if (getContext() != null)
+                    {
+                        Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
+
+                    }
                 });
 
         binding.addNewsButton.setOnClickListener(v -> {

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -36,6 +37,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     private List<News> newsList;
     private OnItemClickListener listener;
+    private FirebaseFirestore database;
 
     public NewsAdapter(List<News> newsList) {
         this.newsList = newsList;
@@ -59,6 +61,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
+
+        database = FirebaseFirestore.getInstance();
+
         News news = newsList.get(position);
         holder.newsTitle.setText(news.getNewsTitle());
         holder.newsTime.setText(news.getNewsTime());
@@ -66,7 +71,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
         String email = MainActivity.getEmail(holder.imageView.getContext());
 
-        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+        DocumentReference usersReference = database.collection("users").document(email);
 
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {

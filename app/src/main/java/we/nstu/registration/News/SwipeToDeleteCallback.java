@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
@@ -40,6 +41,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     private final NewsAdapter adapter;
     private final Context context;
+    private FirebaseFirestore database;
 
     public SwipeToDeleteCallback(NewsAdapter adapter, Context context) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -92,6 +94,11 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     private void deleteNewsFromFirestore(int position) {
 
+        if (database == null)
+        {
+            database = FirebaseFirestore.getInstance();
+        }
+
         List<News> newsList = adapter.getNewsList();
         String newsID = newsList.get(position).getNewsID();
         newsList.remove(position);
@@ -100,7 +107,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
         String email = MainActivity.getEmail(context);
 
-        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+        DocumentReference usersReference = database.collection("users").document(email);
 
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -128,7 +135,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     }
 
     private void updateNewsJson(User user, String newNewsJson, String newsID) {
-        DocumentReference schoolDocument = MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID()));
+        DocumentReference schoolDocument = database.collection("schools").document(String.valueOf(user.getSchoolID()));
         schoolDocument.update("newsJson", newNewsJson);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();

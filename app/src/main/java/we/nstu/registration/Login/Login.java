@@ -11,15 +11,19 @@ import we.nstu.registration.Registration.Registration;
 import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.FragmentLoginBinding;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Login extends AppCompatActivity {
     private FragmentLoginBinding binding;
+    private FirebaseFirestore database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        database = FirebaseFirestore.getInstance();
 
         String email = MainActivity.getEmail(getApplicationContext());
         if (email != null && !email.isEmpty()) {
@@ -36,7 +40,7 @@ public class Login extends AppCompatActivity {
                 String username = binding.username.getText().toString().toLowerCase();
                 String password = User.encryptPassword(binding.password.getText().toString());
 
-                DocumentReference reference = MainActivity.database.collection("users").document(username);
+                DocumentReference reference = database.collection("users").document(username);
                 reference.get()
                         .addOnSuccessListener(documentSnapshot -> {
                             if (documentSnapshot.exists()) {

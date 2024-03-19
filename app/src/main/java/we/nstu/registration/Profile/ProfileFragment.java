@@ -17,19 +17,16 @@ import android.widget.Toast;
 
 import we.nstu.registration.Login.Login;
 import we.nstu.registration.MainActivity;
-import we.nstu.registration.Registration.Registration;
-import we.nstu.registration.Settings.Settings;
 import we.nstu.registration.User.User;
-import we.nstu.registration.UsersActivity;
+import we.nstu.registration.User.UsersActivity;
 import we.nstu.registration.databinding.FragmentProfileBinding;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import static android.app.Activity.RESULT_OK;
 
 
 import java.io.ByteArrayOutputStream;
@@ -42,9 +39,8 @@ public class ProfileFragment extends Fragment {
     private String email;
     private StorageReference usersRef;
     private StorageReference storageRef;
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
+    private FirebaseFirestore database;
+    public ProfileFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +52,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+
+        database = FirebaseFirestore.getInstance();
 
         binding.progressBar.setVisibility(View.VISIBLE);
 
@@ -73,17 +71,23 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+        DocumentReference usersReference = database.collection("users").document(email);
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
+
+                        if (user.getAccessLevel() != 0)
+                        {
+                            binding.createNewInvitation.setVisibility(View.VISIBLE);
+                        }
+
                         binding.fullName.setText(user.getFirstName() + " " + user.getSecondName() + " " + user.getSurname());
                         binding.email.setText(email);
                         binding.accessLevel.setText(user.accessLevelToText());
 
 
-                        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
+                        database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                                 .addOnSuccessListener(ds -> {
                                     binding.schoolName.setText(ds.get("schoolName").toString());
                                 })
@@ -91,7 +95,7 @@ public class ProfileFragment extends Fragment {
                                     Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
                                 });
 
-                        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
+                        database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
                                 .addOnSuccessListener(ds -> {
                                     binding.classNumber.setText(ds.get("classroomName").toString());
                                     binding.teatcherFullName.setText(ds.get("teacher").toString());
@@ -128,7 +132,7 @@ public class ProfileFragment extends Fragment {
             builder.setMessage("Вы уверены, что хотите удалить аккаунт?");
             builder.setPositiveButton("Да", (dialog, which) -> {
 
-                DocumentReference usersReference2 = MainActivity.database.collection("users").document(email);
+                DocumentReference usersReference2 = database.collection("users").document(email);
                 usersReference2.get()
                         .addOnSuccessListener(documentSnapshot -> {
                             if (documentSnapshot.exists()) {
@@ -157,17 +161,17 @@ public class ProfileFragment extends Fragment {
     public void deleteAccount(User user)
     {
 
-        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
+        database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                 .addOnSuccessListener(ds -> {
                     String studentsID = ds.get("studentsID").toString();
                     // Удаляем учетную запись пользователя из списка
                     String updatedStudentsID = studentsID.replace(user.getEmail() + " ", "").replace(" " + user.getEmail(), "");
                     // Обновляем список почт в базе данных
-                    MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).update("studentsID", updatedStudentsID);
+                    database.collection("schools").document(String.valueOf(user.getSchoolID())).update("studentsID", updatedStudentsID);
                 });
 
 
-        MainActivity.database.collection("users").document(email).delete()
+        database.collection("users").document(email).delete()
                 .addOnSuccessListener(runnable -> {
                     MainActivity.clearEmail(getContext());
                     Intent i = new Intent(requireActivity(), Login.class);

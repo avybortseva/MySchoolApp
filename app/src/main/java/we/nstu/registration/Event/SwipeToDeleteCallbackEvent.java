@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
@@ -33,6 +34,7 @@ public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
 
     private final EventAdapter adapter;
     private final Context context;
+    private FirebaseFirestore database;
 
     public SwipeToDeleteCallbackEvent(EventAdapter adapter, Context context) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -85,7 +87,13 @@ public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
         dialog.show();
     }
 
-    private void deleteNewsFromFirestore(int position) {
+    private void deleteNewsFromFirestore(int position)
+    {
+
+        if (database == null)
+        {
+            database = FirebaseFirestore.getInstance();
+        }
 
         List<Event> eventList = adapter.getEventList();
         String eventID = eventList.get(position).getEventID();
@@ -95,7 +103,7 @@ public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
 
         String email = MainActivity.getEmail(context);
 
-        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+        DocumentReference usersReference = database.collection("users").document(email);
 
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -123,7 +131,13 @@ public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
     }
 
     private void updateEventsJson(User user, String newEventsJson, String eventID) {
-        DocumentReference schoolDocument = MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID()));
+
+        if (database == null)
+        {
+            database = FirebaseFirestore.getInstance();
+        }
+
+        DocumentReference schoolDocument = database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID()));
         schoolDocument.update("eventsJson", newEventsJson);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();

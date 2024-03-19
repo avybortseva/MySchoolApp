@@ -29,7 +29,8 @@
                 android:text="@string/settings"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                />
 
             <Button
                 android:id="@+id/logoutButton"
@@ -321,7 +322,9 @@
         android:textStyle="normal"
         android:textSize="20sp"
         android:paddingTop="10dp"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        android:visibility="gone"
+        />
 
 
 

@@ -1,4 +1,4 @@
-package we.nstu.registration;
+package we.nstu.registration.User;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,27 +7,27 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import we.nstu.registration.News.NewsFull;
-import we.nstu.registration.Registration.Registration;
-import we.nstu.registration.User.Invite;
-import we.nstu.registration.User.User;
+import we.nstu.registration.MainActivity;
 import we.nstu.registration.databinding.ActivityInvitationCreateBinding;
-import we.nstu.registration.databinding.NewsActivityBinding;
 
 public class InvitationCreateActivity extends AppCompatActivity {
 
     private ActivityInvitationCreateBinding binding;
+    private FirebaseFirestore database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityInvitationCreateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        database = FirebaseFirestore.getInstance();
 
         binding.createInvitationButton.setOnClickListener(v -> {
 
@@ -57,12 +57,12 @@ public class InvitationCreateActivity extends AppCompatActivity {
 
             String email = MainActivity.getEmail(getApplicationContext());
 
-            DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+            DocumentReference usersReference = database.collection("users").document(email);
             usersReference.get()
                     .addOnSuccessListener(documentSnapshot -> {
                         User user = documentSnapshot.toObject(User.class);
 
-                        MainActivity.database
+                        database
                                 .collection("schools")
                                 .document(String.valueOf(user.getSchoolID()))
                                 .collection("classrooms")
@@ -70,7 +70,7 @@ public class InvitationCreateActivity extends AppCompatActivity {
                                 .addOnSuccessListener(ds2 -> {
                                     Invite invite = new Invite(user.getSchoolID(), ds2.size(), Integer.parseInt(binding.numOfUses.getText().toString()), accessLevel);
 
-                                    DocumentReference reference3 = MainActivity.database.collection("schools")
+                                    DocumentReference reference3 = database.collection("schools")
                                             .document(String.valueOf(user.getSchoolID()))
                                             .collection("classrooms")
                                             .document(String.valueOf(ds2.size()));
@@ -85,7 +85,7 @@ public class InvitationCreateActivity extends AppCompatActivity {
 
                                     String code = generateRandomCode();
 
-                                    DocumentReference reference = MainActivity.database.collection("invitations").document(code);
+                                    DocumentReference reference = database.collection("invitations").document(code);
                                     reference.get()
                                             .addOnSuccessListener(ds -> {
                                                 if(!ds.exists())

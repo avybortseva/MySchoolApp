@@ -1,4 +1,4 @@
-package we.nstu.registration;
+package we.nstu.registration.User;
 
 import androidx.appcompat.app.AppCompatActivity;
 

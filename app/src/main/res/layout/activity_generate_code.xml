@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@color/white"
     android:layout_margin="10dp"
-    tools:context=".GenerateCodeActivity">
+    tools:context=".User.GenerateCodeActivity">
 
     <TextView
         android:layout_width="match_parent"

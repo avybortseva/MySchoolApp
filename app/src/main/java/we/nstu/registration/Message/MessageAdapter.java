@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -38,6 +39,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     private List<Message> messageList;
     private MessageAdapter.OnItemClickListener listener;
+    private FirebaseFirestore database;
 
     public MessageAdapter(List<Message> messageList) {
         this.messageList = messageList;
@@ -62,20 +64,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messageList.get(position);
 
+        database = FirebaseFirestore.getInstance();
+
         //Установка ФИО собеседника
-        DocumentReference reference = MainActivity.database.collection("users").document(message.getCompanionEmail());
+        DocumentReference reference = database.collection("users").document(message.getCompanionEmail());
         reference.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists())
                     {
                         User user = documentSnapshot.toObject(User.class);
-
                         holder.titleTextView.setText(user.getSecondName() + " " + user.getFirstName() + " " + user.getSurname());
-
-                    }
-                    else
-                    {
-
                     }
                 });
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,30 +25,33 @@ public class StartNewDialogActivity extends AppCompatActivity implements AddMess
     private ActivityMessageBinding binding;
     private AddMessageAdapter addMessageAdapter;
     private List<User> userList;
+    private FirebaseFirestore database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMessageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        database = FirebaseFirestore.getInstance();
+
         binding.recyclerUser.setLayoutManager(new LinearLayoutManager(this));
 
         userList = new ArrayList<>();
 
         String email = MainActivity.getEmail(getApplicationContext());
-        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+        DocumentReference usersReference = database.collection("users").document(email);
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot ->
                 {
                     User user = documentSnapshot.toObject(User.class);
 
-                    MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
+                    database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                             .addOnSuccessListener(ds -> {
                                 String[] studentsID = ds.get("studentsID").toString().split(" ");
 
                                 for (int i = 0; i < studentsID.length; i++)
                                 {
-                                    MainActivity.database.collection("users").document(studentsID[i])
+                                    database.collection("users").document(studentsID[i])
                                             .get()
                                             .addOnSuccessListener(documentSnapshot1 -> {
                                                 User userToAdd = documentSnapshot1.toObject(User.class);
@@ -73,7 +77,7 @@ public class StartNewDialogActivity extends AppCompatActivity implements AddMess
     public void onItemClick(User user) {
         String email = MainActivity.getEmail(getApplicationContext());
 
-        MainActivity.database.collection("users").document(email).get()
+        database.collection("users").document(email).get()
                 .addOnSuccessListener(ds -> {
                     String dialogs = ds.get("dialogs").toString();
                     if (dialogs.isEmpty()) {
@@ -85,10 +89,10 @@ public class StartNewDialogActivity extends AppCompatActivity implements AddMess
                         dialogs = String.join(" ", dialogsSet);
                     }
 
-                    MainActivity.database.collection("users").document(email).update("dialogs", dialogs);
+                    database.collection("users").document(email).update("dialogs", dialogs);
                 });
 
-        MainActivity.database.collection("users").document(user.getEmail()).get()
+        database.collection("users").document(user.getEmail()).get()
                 .addOnSuccessListener(ds -> {
                     String dialogs = ds.get("dialogs").toString();
                     if (dialogs.isEmpty()) {
@@ -100,7 +104,7 @@ public class StartNewDialogActivity extends AppCompatActivity implements AddMess
                         dialogs = String.join(" ", dialogsSet);
                     }
 
-                    MainActivity.database.collection("users").document(user.getEmail()).update("dialogs", dialogs);
+                    database.collection("users").document(user.getEmail()).update("dialogs", dialogs);
                 });
 
         Intent i = new Intent(getApplicationContext(), ChatActivity.class);

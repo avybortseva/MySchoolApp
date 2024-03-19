@@ -10,17 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
 import we.nstu.registration.R;
+import we.nstu.registration.User.User;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder>
 {
 
     private List<ChatMessage> chatMessages;
+    private FirebaseFirestore database;
 
     public ChatAdapter(List<ChatMessage> chatMessages) {
         this.chatMessages = chatMessages;
@@ -37,7 +41,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public void onBindViewHolder(@NonNull ChatAdapter.ChatViewHolder holder, int position) {
         ChatMessage chatMessage = chatMessages.get(position);
 
-        holder.nameTextView.setText(chatMessage.getMessageSender());
+        database = FirebaseFirestore.getInstance();
+
+        //Установка имени
+        DocumentReference usersReference = database.collection("users").document(chatMessage.getMessageSender());
+        usersReference.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    User user = documentSnapshot.toObject(User.class);
+                    holder.nameTextView.setText(user.getFirstName() + " " + user.getSecondName() + " " + user.getSurname());
+                });
+
         holder.messageTextView.setText(chatMessage.getMessageText());
         holder.timeTextView.setText(chatMessage.getMessageTime());
 

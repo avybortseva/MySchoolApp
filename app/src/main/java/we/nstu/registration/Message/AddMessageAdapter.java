@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -26,6 +27,8 @@ public class AddMessageAdapter extends RecyclerView.Adapter<AddMessageAdapter.Us
 
     private List<User> userList;
     private OnItemClickListener listener;
+    private FirebaseFirestore database;
+
     public AddMessageAdapter(List<User> userList, OnItemClickListener listener) {
         this.userList = userList;
         this.listener = listener;
@@ -43,6 +46,8 @@ public class AddMessageAdapter extends RecyclerView.Adapter<AddMessageAdapter.Us
 
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
+        database = FirebaseFirestore.getInstance();
+
         User user = userList.get(position);
 
         holder.itemView.setOnClickListener(v -> listener.onItemClick(user));
@@ -51,7 +56,7 @@ public class AddMessageAdapter extends RecyclerView.Adapter<AddMessageAdapter.Us
         holder.textStatusUser.setText(user.accessLevelToText());
 
         //Установка имени школьного класса
-        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
+        database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
                 .addOnSuccessListener(ds -> {
                     holder.textClassUser.setText(ds.get("classroomName").toString());
                 });

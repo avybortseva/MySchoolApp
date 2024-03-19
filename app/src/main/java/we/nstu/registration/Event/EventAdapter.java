@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -20,8 +21,9 @@ import we.nstu.registration.MainActivity;
 import we.nstu.registration.R;
 import we.nstu.registration.User.User;
 
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> implements ItemTouchHelperAdapterEvent{
-
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> implements ItemTouchHelperAdapterEvent
+{
+    private FirebaseFirestore database;
     private List<Event> eventList;
     private OnItemClickListener listener;
 
@@ -46,6 +48,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
+
+        database = FirebaseFirestore.getInstance();
+
         Event event = eventList.get(position);
         holder.eventName.setText(event.getEventName());
         holder.eventTime.setText(event.getEventTime());
@@ -53,7 +58,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         String email = MainActivity.getEmail(holder.itemView.getContext());
 
-        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+        DocumentReference usersReference = database.collection("users").document(email);
 
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -67,7 +72,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                         imageRef.getDownloadUrl().addOnSuccessListener(uri -> Glide.with(holder.itemView.getContext())
                                 .load(uri)
                                 .into(holder.eventImage)).addOnFailureListener(e -> {
-                            // Handle any errors
                         });
                     }
                 });
@@ -104,9 +108,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public void removeItem(int position) {
         eventList.remove(position);
         notifyItemRemoved(position);
-        // Здесь вам нужно будет также удалить элемент из базы данных
-        // Например, если у вас есть ссылка на DocumentReference для элемента, вы можете его удалить так:
-        // newsList.get(position).getDocumentReference().delete();
     }
 
     public Event getItem(int position) {

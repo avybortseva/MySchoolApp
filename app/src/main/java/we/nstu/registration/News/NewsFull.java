@@ -14,12 +14,13 @@ import we.nstu.registration.R;
 import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.NewsActivityBinding;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
 public class NewsFull extends AppCompatActivity
 {
-
+    private FirebaseFirestore database;
     private NewsActivityBinding binding;
 
     @Override
@@ -27,18 +28,21 @@ public class NewsFull extends AppCompatActivity
         super.onCreate(savedInstanceState);
         binding = NewsActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        database = FirebaseFirestore.getInstance();
+
         String id = getIntent().getStringExtra("newsID");
 
         String email = MainActivity.getEmail(getApplicationContext());
 
-        DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+        DocumentReference usersReference = database.collection("users").document(email);
 
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
 
-                        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
+                        database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                                 .addOnSuccessListener(ds -> {
 
                                     String newsJson = ds.get("newsJson").toString();

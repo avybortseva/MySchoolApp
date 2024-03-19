@@ -13,6 +13,7 @@ import we.nstu.registration.MainActivity;
 import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.FragmentScheduleBinding;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,24 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScheduleFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private FragmentScheduleBinding binding;
     private LocalDate date;
     private LessonAdapter adapter;
 
-    public ScheduleFragment() {
-        // Required empty public constructor
-    }
-
-    public static ScheduleFragment newInstance(String param1, String param2) {
-        ScheduleFragment fragment = new ScheduleFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private FirebaseFirestore database;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +36,8 @@ public class ScheduleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentScheduleBinding.inflate(inflater, container, false);
+
+        database = FirebaseFirestore.getInstance();
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -77,12 +67,12 @@ public class ScheduleFragment extends Fragment {
     }
 
     private void setSchedule() {
-        DocumentReference usersReference = MainActivity.database.collection("users").document(MainActivity.getEmail(getContext()));
+        DocumentReference usersReference = database.collection("users").document(MainActivity.getEmail(getContext()));
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
-                        MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
+                        database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
                                 .addOnSuccessListener(ds -> {
                                     String scheduleJson = ds.get("scheduleJSON").toString();
                                     Schedule schedule = Schedule.fromJson(scheduleJson);

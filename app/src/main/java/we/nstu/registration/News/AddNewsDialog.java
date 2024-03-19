@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -48,6 +49,7 @@ public class AddNewsDialog extends DialogFragment {
     private List<Uri> uriList;
     private OnNewsAddedListener listener;
     private Context context;
+    private FirebaseFirestore database;
 
     public AddNewsDialog() {
     }
@@ -61,6 +63,8 @@ public class AddNewsDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DialogAddNewsBinding.inflate(inflater, container, false);
+
+        database = FirebaseFirestore.getInstance();
 
         binding.addNewsButton.setOnClickListener(v -> {
 
@@ -76,14 +80,14 @@ public class AddNewsDialog extends DialogFragment {
 
             email = MainActivity.getEmail(getContext());
 
-            DocumentReference usersReference = MainActivity.database.collection("users").document(email);
+            DocumentReference usersReference = database.collection("users").document(email);
 
             usersReference.get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
                             User user = documentSnapshot.toObject(User.class);
 
-                            MainActivity.database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
+                            database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
                                     .addOnSuccessListener(ds -> {
 
                                         String newsJson = ds.get("newsJson").toString();
@@ -107,7 +111,7 @@ public class AddNewsDialog extends DialogFragment {
                                         SchoolNews newSchoolNews = new SchoolNews(newsList);
                                         String newNewsJson = newSchoolNews.newsToJson();
 
-                                        MainActivity.database.collection("schools")
+                                        database.collection("schools")
                                                 .document(String.valueOf(user.getSchoolID()))
                                                 .update("newsJson", newNewsJson)
                                                 .addOnSuccessListener(runnable -> {

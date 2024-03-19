@@ -23,13 +23,12 @@ import we.nstu.registration.Profile.ProfileFragment;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    public static FirebaseFirestore database = FirebaseFirestore.getInstance();
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        we.nstu.registration.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         String currentFragment = getCurrentFragment();
@@ -45,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (currentFragment.equals("ProfileFragment")) {
                 replaceFragment(new ProfileFragment());
             }
-        } else {
-            replaceFragment(new NewsFragment());
+            else {
+                replaceFragment(new NewsFragment());
+            }
         }
 
         binding.navigationBar.setOnItemSelectedListener(item -> {
