@@ -48,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new NewsFragment());
             }
         }
+        else
+        {
+            replaceFragment(new NewsFragment());
+        }
 
         binding.navigationBar.setOnItemSelectedListener(item -> {
 

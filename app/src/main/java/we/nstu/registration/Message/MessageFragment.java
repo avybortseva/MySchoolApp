@@ -47,6 +47,8 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
 
         database = FirebaseFirestore.getInstance();
 
+        binding.progressBar.setVisibility(View.VISIBLE);
+
         String email = MainActivity.getEmail(getContext());
         messageList = new ArrayList<>();
 
@@ -59,10 +61,13 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
                     if(documentSnapshot.get("dialogs") == "")
                     {
                         Toast.makeText(getContext(), "Нет диалогов", Toast.LENGTH_SHORT).show();
+                        binding.progressBar.setVisibility(View.GONE);
                     }
                     else
                     {
                         String[] dialogs = documentSnapshot.get("dialogs").toString().split(" ");
+
+                        binding.progressBar.setVisibility(View.GONE);
 
                         for (int i = 0; i < dialogs.length; i++)
                         {
@@ -83,6 +88,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
                     }
 
                 });
+
 
 
         binding.addMessageButton.setOnClickListener(v -> {
