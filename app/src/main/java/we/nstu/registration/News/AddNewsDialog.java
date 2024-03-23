@@ -42,11 +42,11 @@ import we.nstu.registration.databinding.DialogAddNewsBinding;
 
 public class AddNewsDialog extends DialogFragment {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
+    private final int GALLERY_REQUEST = 1;
+    private Uri uri;
     private DialogAddNewsBinding binding;
     private List<News> newsList;
     private String email;
-    private List<Uri> uriList;
     private OnNewsAddedListener listener;
     private Context context;
     private FirebaseFirestore database;
@@ -68,12 +68,7 @@ public class AddNewsDialog extends DialogFragment {
 
         binding.addNewsButton.setOnClickListener(v -> {
 
-            if (binding.newsTitleEditText.getText().toString().isEmpty() || binding.newsDescriptionEditText.getText().toString().isEmpty() || uriList == null)
-            {
-                return;
-            }
-
-            if (uriList.size() < 1 || uriList.size() > 5)
+            if (binding.newsTitleEditText.getText().toString().isEmpty() || binding.newsDescriptionEditText.getText().toString().isEmpty() || uri == null)
             {
                 return;
             }
@@ -122,13 +117,10 @@ public class AddNewsDialog extends DialogFragment {
                                         StorageReference storageRef = storage.getReference();
                                         StorageReference newsRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("News").child(String.valueOf(newsList.size() - 1));
 
-                                        if (uriList!=null)
+                                        if (uri!=null)
                                         {
-
-                                            for (int i = 0; i < uriList.size(); i++) {
-                                                StorageReference imageRef = newsRef.child(String.valueOf(i) + ".jpg");
-                                                imageRef.putFile(uriList.get(i));
-                                            }
+                                            StorageReference imageRef = newsRef.child("news_logo.jpg");
+                                            imageRef.putFile(uri);
                                         }
 
                                         if (listener != null) {
@@ -136,19 +128,14 @@ public class AddNewsDialog extends DialogFragment {
                                         }
 
                                     });
-
                         }
                     });
-
             dismiss();
         });
 
         binding.imageButton.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, GALLERY_REQUEST);
         });
 
 
@@ -160,28 +147,9 @@ public class AddNewsDialog extends DialogFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data.getClipData() != null)
-        {
-            int count = data.getClipData().getItemCount();
-
-            if (count > 5) {
-                Toast.makeText(getActivity(), "Вы можете выбрать до 5 изображений", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (count < 1) {
-                Toast.makeText(getActivity(), "Вы должны выбрать хотя бы одно изображение", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            uriList = new ArrayList<>();
-
-
-            for (int i = 0; i < count; i++) {
-                Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                uriList.add(imageUri);
-
-            }
+        if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            uri = selectedImage;
         }
     }
 

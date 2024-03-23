@@ -79,7 +79,8 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
         builder.setTitle("Подтвердите удаление");
         builder.setMessage("Вы уверены, что хотите удалить эту новость?");
-        builder.setPositiveButton("Да", (dialog, which) -> {
+        builder.setPositiveButton("Да", (dialog, which) ->
+        {
             deleteNewsFromFirestore(position);
             adapter.notifyItemRemoved(position);
         });

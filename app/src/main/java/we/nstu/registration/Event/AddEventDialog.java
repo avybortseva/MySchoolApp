@@ -125,7 +125,7 @@ public class AddEventDialog extends DialogFragment {
 
                                         FirebaseStorage storage = FirebaseStorage.getInstance();
                                         StorageReference storageRef = storage.getReference();
-                                        StorageReference newsRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("Events").child(String.valueOf(eventList.size() - 1));
+                                        StorageReference newsRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child(String.valueOf(user.getClassroomID())).child("Events").child(String.valueOf(eventList.size() - 1));
 
                                         if (uri!=null)
                                         {

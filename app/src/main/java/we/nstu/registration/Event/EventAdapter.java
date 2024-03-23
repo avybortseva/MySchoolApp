@@ -67,7 +67,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
-                        StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("Events").child(event.getEventID()).child("Event_logo.jpg");
+                        StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child(String.valueOf(user.getClassroomID())).child("Events").child(event.getEventID()).child("Event_logo.jpg");
 
                         imageRef.getDownloadUrl().addOnSuccessListener(uri -> Glide.with(holder.itemView.getContext())
                                 .load(uri)

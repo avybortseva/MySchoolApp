@@ -1,5 +1,7 @@
 package we.nstu.registration.Message;
 
+import java.util.Objects;
+
 public class ChatMessage
 {
     private String messageSender;
@@ -54,5 +56,18 @@ public class ChatMessage
 
     public void setMessageChecked(boolean messageChecked) {
         this.messageChecked = messageChecked;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChatMessage that = (ChatMessage) o;
+        return messageChecked == that.messageChecked && Objects.equals(messageSender, that.messageSender) && Objects.equals(messageRecipient, that.messageRecipient) && Objects.equals(messageText, that.messageText) && Objects.equals(messageTime, that.messageTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(messageSender, messageRecipient, messageText, messageTime, messageChecked);
     }
 }

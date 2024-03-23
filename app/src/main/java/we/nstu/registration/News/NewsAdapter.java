@@ -75,12 +75,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
+                    if (documentSnapshot.exists())
+                    {
                         User user = documentSnapshot.toObject(User.class);
 
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
-                        StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("News").child(String.valueOf(news.getNewsID())).child("0.jpg");
+                        StorageReference imageRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("News").child(String.valueOf(news.getNewsID())).child("news_logo.jpg");
 
                         imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
 
@@ -89,7 +90,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
                                     .into(holder.imageView);
 
                         });
-
                     }
                 });
 
@@ -132,8 +132,5 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         newsList.remove(position);
         notifyItemRemoved(position);
     }
-
-
-
 }
 

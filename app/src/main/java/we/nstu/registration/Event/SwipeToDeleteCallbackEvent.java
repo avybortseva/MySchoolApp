@@ -142,9 +142,9 @@ public class SwipeToDeleteCallbackEvent extends ItemTouchHelper.SimpleCallback {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference newsRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child("Events").child(eventID);
+        StorageReference eventsRef = storageRef.child("Schools").child(String.valueOf(user.getSchoolID())).child(String.valueOf(user.getClassroomID())).child("Events").child(eventID);
 
-        newsRef.listAll().addOnSuccessListener(listResult -> {
+        eventsRef.listAll().addOnSuccessListener(listResult -> {
 
             List<StorageReference> items = listResult.getItems();
             List<Task<Void>> deleteTasks = new ArrayList<>();

@@ -51,7 +51,6 @@ import we.nstu.registration.databinding.FragmentMessageBinding;
 
 public class ChatActivity extends AppCompatActivity
 {
-
     private ChatAdapter chatAdapter;
     private List<ChatMessage> chatMessages;
     private ChatActivityBinding binding;
@@ -64,6 +63,7 @@ public class ChatActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = ChatActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -76,41 +76,48 @@ public class ChatActivity extends AppCompatActivity
         DocumentReference usersReference = database.collection("users").document(companionEmail);
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    User user = documentSnapshot.toObject(User.class);
-                    binding.name.setText(user.getFirstName() + " " + user.getSecondName() + " " + user.getSurname());
+                    if(documentSnapshot.exists())
+                    {
+                        User user = documentSnapshot.toObject(User.class);
+                        binding.name.setText(user.getFirstName() + " " + user.getSecondName() + " " + user.getSurname());
+                    }
                 });
 
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         chatMessages = new ArrayList<>();
-        chatAdapter = new ChatAdapter(chatMessages);
+        chatAdapter = new ChatAdapter(chatMessages, getApplicationContext());
         binding.recyclerView.setAdapter(chatAdapter);
 
         DatabaseReference reference = databaseRealtime.getReference("chats").child(chatIndex);
         reference.get()
                 .addOnSuccessListener(dataSnapshot -> {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                        String chatMessageJson = ds.getValue(String.class);
-
-                        ChatMessage chatMessage = chatMessageFromJson(chatMessageJson);
-
-                        chatMessages.add(chatMessage);
-                    }
-
-                    if (chatMessages.size() != 0)
+                    if (dataSnapshot.exists())
                     {
-                        chatMessages.remove(0);
-
-                        if(chatMessages.size() > 5)
+                        for (DataSnapshot ds : dataSnapshot.getChildren())
                         {
-                            binding.recyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+
+                            String chatMessageJson = ds.getValue(String.class);
+
+                            ChatMessage chatMessage = chatMessageFromJson(chatMessageJson);
+
+                            chatMessages.add(chatMessage);
                         }
 
-                    }
+                        if (chatMessages.size() != 0)
+                        {
+                            chatMessages.remove(0);
 
-                    chatAdapter.notifyDataSetChanged();
+                            if(chatMessages.size() > 5)
+                            {
+                                binding.recyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+                            }
+
+                        }
+
+                        chatAdapter.notifyDataSetChanged();
+                    }
                 });
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -128,7 +135,8 @@ public class ChatActivity extends AppCompatActivity
         lastItemQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren())
+                {
                     String messageJson =  ds.getValue(String.class);
                     ChatMessage chatMessage = chatMessageFromJson(messageJson);
                     chatMessages.add(chatMessage);
@@ -139,7 +147,6 @@ public class ChatActivity extends AppCompatActivity
                 {
                     binding.recyclerView.smoothScrollToPosition(chatMessages.size() - 1);
                 }
-
             }
 
             @Override
@@ -154,7 +161,8 @@ public class ChatActivity extends AppCompatActivity
 
             ChatMessage chatMessage = new ChatMessage(email, companionEmail, messageText, getCurrentTime(), false);
 
-            if (!messageText.isEmpty()) {
+            if (!messageText.isEmpty())
+            {
                 DatabaseReference myRef = databaseRealtime.getReference("chats").child(chatIndex).push();
                 myRef.setValue(chatMessageToJson(chatMessage));
 
@@ -165,18 +173,19 @@ public class ChatActivity extends AppCompatActivity
 
                 database.collection("users").document(email).get()
                         .addOnSuccessListener(ds -> {
-
-                            String dialogs = ds.get("dialogs").toString();
-                            if (dialogs.isEmpty()) {
-                                dialogs = companionEmail;
-                            } else {
-                                dialogs = companionEmail + " " + dialogs;
-                                String[] dialogsArray = dialogs.split(" ");
-                                Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
-                                dialogs = String.join(" ", dialogsSet);
+                            if(ds.exists())
+                            {
+                                String dialogs = ds.get("dialogs").toString();
+                                if (dialogs.isEmpty()) {
+                                    dialogs = companionEmail;
+                                } else {
+                                    dialogs = companionEmail + " " + dialogs;
+                                    String[] dialogsArray = dialogs.split(" ");
+                                    Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
+                                    dialogs = String.join(" ", dialogsSet);
+                                    database.collection("users").document(email).update("dialogs", dialogs);
+                                }
                             }
-
-                            database.collection("users").document(email).update("dialogs", dialogs);
                         });
 
                 database.collection("users").document(companionEmail).get()
@@ -205,9 +214,6 @@ public class ChatActivity extends AppCompatActivity
         binding.backToDialogs.setOnClickListener(v -> {
             finish();
         });
-
-
-
     }
 
     public String getChatIndex(String companionEmail)
@@ -223,7 +229,7 @@ public class ChatActivity extends AppCompatActivity
         LocalDateTime localDateTime = LocalDateTime.now();
         ZoneId moscowZone = ZoneId.of("Europe/Moscow");
         ZonedDateTime moscowDateTime = localDateTime.atZone(moscowZone);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
         return moscowDateTime.format(formatter);
     }
 

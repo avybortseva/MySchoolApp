@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Objects;
 
 public class User
 {
@@ -203,5 +204,18 @@ public class User
 
     public void setNotifyToken(String notifyToken) {
         this.notifyToken = notifyToken;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return schoolID == user.schoolID && classroomID == user.classroomID && accessLevel == user.accessLevel && Objects.equals(firstName, user.firstName) && Objects.equals(secondName, user.secondName) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(dialogs, user.dialogs) && Objects.equals(notifyToken, user.notifyToken);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, secondName, surname, email, password, schoolID, classroomID, accessLevel, dialogs, notifyToken);
     }
 }

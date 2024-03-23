@@ -99,7 +99,8 @@ public class MessageFragment extends Fragment implements MessageAdapter.OnItemCl
     }
 
     @Override
-    public void onItemClick(Message message) {
+    public void onItemClick(Message message)
+    {
         Intent i = new Intent(requireActivity(), ChatActivity.class);
         i.putExtra("companionEmail", message.getCompanionEmail());
         startActivity(i);

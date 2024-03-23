@@ -111,9 +111,9 @@
     <string name="description_event">Описание события</string>
     <string name="_1">1</string>
     <string name="simpe_lesson">Математика 10:15 - 11:45\nПодолян Е.В. 305 кабинет</string>
-    <string name="name_teacher">Подолян Е.В.</string>
+    <string name="name_teacher">Учитель</string>
     <string name="simple_message">Сообщение</string>
-    <string name="simple_data">13:14</string>
+    <string name="simple_data">Время</string>
     <string name="time">Время</string>
     <string name="text">Текст</string>
 </resources>

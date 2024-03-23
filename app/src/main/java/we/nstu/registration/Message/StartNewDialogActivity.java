@@ -21,11 +21,11 @@ import we.nstu.registration.User.User;
 import we.nstu.registration.databinding.ActivityMessageBinding;
 
 public class StartNewDialogActivity extends AppCompatActivity implements AddMessageAdapter.OnItemClickListener {
-
     private ActivityMessageBinding binding;
     private AddMessageAdapter addMessageAdapter;
     private List<User> userList;
     private FirebaseFirestore database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,34 +43,38 @@ public class StartNewDialogActivity extends AppCompatActivity implements AddMess
         usersReference.get()
                 .addOnSuccessListener(documentSnapshot ->
                 {
-                    User user = documentSnapshot.toObject(User.class);
+                    if (documentSnapshot.exists()) {
+                        User user = documentSnapshot.toObject(User.class);
 
-                    database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
-                            .addOnSuccessListener(ds -> {
-                                String[] studentsID = ds.get("studentsID").toString().split(" ");
+                        database.collection("schools").document(String.valueOf(user.getSchoolID())).get()
+                                .addOnSuccessListener(ds -> {
+                                    if (ds.exists()) {
+                                        String[] studentsID = ds.get("studentsID").toString().split(" ");
+                                        String[] dialogs = user.getDialogs().split(" ");
 
-                                for (int i = 0; i < studentsID.length; i++)
-                                {
-                                    database.collection("users").document(studentsID[i])
-                                            .get()
-                                            .addOnSuccessListener(documentSnapshot1 -> {
-                                                User userToAdd = documentSnapshot1.toObject(User.class);
+                                        for (int i = 0; i < studentsID.length; i++) {
+                                            {
+                                                database.collection("users").document(studentsID[i])
+                                                        .get()
+                                                        .addOnSuccessListener(documentSnapshot1 -> {
+                                                            if (documentSnapshot1.exists()) {
+                                                                User userToAdd = documentSnapshot1.toObject(User.class);
 
-                                                if(!userToAdd.getEmail().equals(MainActivity.getEmail(getApplicationContext())))
-                                                {
-                                                    userList.add(userToAdd);
-                                                    addMessageAdapter = new AddMessageAdapter(userList, this);
-                                                    binding.recyclerUser.setAdapter(addMessageAdapter);
-                                                }
-                                            });
-                                }
-
-
-
-                            });
-
+                                                                if (!userToAdd.getEmail().equals(MainActivity.getEmail(getApplicationContext())) || !Arrays.asList(dialogs).contains(userToAdd.getEmail()))
+                                                                {
+                                                                    userList.add(userToAdd);
+                                                                    addMessageAdapter = new AddMessageAdapter(userList, this);
+                                                                    binding.recyclerUser.setAdapter(addMessageAdapter);
+                                                                }
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    }
+                                });
+                    }
                 });
-    }
+    };
 
 
     @Override
@@ -79,32 +83,36 @@ public class StartNewDialogActivity extends AppCompatActivity implements AddMess
 
         database.collection("users").document(email).get()
                 .addOnSuccessListener(ds -> {
-                    String dialogs = ds.get("dialogs").toString();
-                    if (dialogs.isEmpty()) {
-                        dialogs = user.getEmail();
-                    } else {
-                        dialogs = user.getEmail() + " " + dialogs;
-                        String[] dialogsArray = dialogs.split(" ");
-                        Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
-                        dialogs = String.join(" ", dialogsSet);
-                    }
+                    if (ds.exists()) {
+                        String dialogs = ds.get("dialogs").toString();
+                        if (dialogs.isEmpty()) {
+                            dialogs = user.getEmail();
+                        } else {
+                            dialogs = user.getEmail() + " " + dialogs;
+                            String[] dialogsArray = dialogs.split(" ");
+                            Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
+                            dialogs = String.join(" ", dialogsSet);
+                        }
 
-                    database.collection("users").document(email).update("dialogs", dialogs);
+                        database.collection("users").document(email).update("dialogs", dialogs);
+                    }
                 });
 
         database.collection("users").document(user.getEmail()).get()
                 .addOnSuccessListener(ds -> {
-                    String dialogs = ds.get("dialogs").toString();
-                    if (dialogs.isEmpty()) {
-                        dialogs = email;
-                    } else {
-                        dialogs = email + " " + dialogs;
-                        String[] dialogsArray = dialogs.split(" ");
-                        Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
-                        dialogs = String.join(" ", dialogsSet);
-                    }
+                    if (ds.exists()) {
+                        String dialogs = ds.get("dialogs").toString();
+                        if (dialogs.isEmpty()) {
+                            dialogs = email;
+                        } else {
+                            dialogs = email + " " + dialogs;
+                            String[] dialogsArray = dialogs.split(" ");
+                            Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
+                            dialogs = String.join(" ", dialogsSet);
+                        }
 
-                    database.collection("users").document(user.getEmail()).update("dialogs", dialogs);
+                        database.collection("users").document(user.getEmail()).update("dialogs", dialogs);
+                    }
                 });
 
         Intent i = new Intent(getApplicationContext(), ChatActivity.class);

@@ -92,7 +92,10 @@ public class ProfileFragment extends Fragment {
                                     binding.schoolName.setText(ds.get("schoolName").toString());
                                 })
                                 .addOnFailureListener(e -> {
-                                    Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
+                                    if(getContext() != null)
+                                    {
+                                        Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
+                                    }
                                 });
 
                         database.collection("schools").document(String.valueOf(user.getSchoolID())).collection("classrooms").document(String.valueOf(user.getClassroomID())).get()
@@ -102,18 +105,27 @@ public class ProfileFragment extends Fragment {
                                     binding.progressBar.setVisibility(View.GONE);
                                 })
                                 .addOnFailureListener(e -> {
-                                    Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
+                                    if(getContext() != null)
+                                    {
+                                        Toast.makeText(getContext(), "Ошибка при загрузке данных школы", Toast.LENGTH_SHORT).show();
+                                    }
                                 });
 
                     }
                 }).addOnFailureListener(e->{
-                    Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
+                    if(getContext() != null)
+                    {
+                        Toast.makeText(getContext(), "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show();
+                    }
                 });
 
 
         binding.logoutButton.setOnClickListener(v -> {
             MainActivity.clearEmail(getContext());
-            Toast.makeText(getContext(), "Вы успешно вышли из аккаунта", Toast.LENGTH_SHORT).show();
+            if(getContext() != null)
+            {
+                Toast.makeText(getContext(), "Вы успешно вышли из аккаунта", Toast.LENGTH_SHORT).show();
+            }
             Intent i = new Intent(requireActivity(), Login.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
@@ -178,10 +190,16 @@ public class ProfileFragment extends Fragment {
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
                     requireActivity().finishAffinity();
-                    Toast.makeText(getContext(), "Вы успешно удалили аккаунт", Toast.LENGTH_SHORT).show();
+                    if(getContext() != null)
+                    {
+                        Toast.makeText(getContext(), "Вы успешно удалили аккаунт", Toast.LENGTH_SHORT).show();
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Не удалось удалить аккаунт. Попробуйте позже", Toast.LENGTH_SHORT).show();
+                    if(getContext() != null)
+                    {
+                        Toast.makeText(getContext(), "Не удалось удалить аккаунт. Попробуйте позже", Toast.LENGTH_SHORT).show();
+                    }
                 });
 
         //Удаление картинки
@@ -211,9 +229,15 @@ public class ProfileFragment extends Fragment {
 
                 UploadTask uploadTask = imageRef.putBytes(data2);
                 uploadTask.addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Ошибка!", Toast.LENGTH_SHORT).show();
+                    if(getContext() != null)
+                    {
+                        Toast.makeText(getContext(), "Ошибка!", Toast.LENGTH_SHORT).show();
+                    }
                 }).addOnSuccessListener(taskSnapshot -> {
-                    Toast.makeText(getContext(), "Картинка успешно сохранена!", Toast.LENGTH_SHORT).show();
+                    if(getContext() != null)
+                    {
+                        Toast.makeText(getContext(), "Картинка успешно сохранена!", Toast.LENGTH_SHORT).show();
+                    }
                 });
             } catch (IOException e) {
                 e.printStackTrace();

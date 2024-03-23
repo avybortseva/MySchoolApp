@@ -30,7 +30,8 @@
             android:theme="@style/Theme.Registration" />
         <activity
             android:name=".Message.StartNewDialogActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".MessageActivity"
             android:exported="false" />
