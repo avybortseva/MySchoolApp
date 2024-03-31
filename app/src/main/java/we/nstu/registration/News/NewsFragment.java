@@ -101,8 +101,11 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
                                         adapter.setOnItemClickListener(this);
                                         binding.recyclerView.setAdapter(adapter);
 
-                                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapter, getContext()));
-                                        itemTouchHelper.attachToRecyclerView(binding.recyclerView);
+                                        if (user.getAccessLevel() != 0)
+                                        {
+                                            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapter, getContext()));
+                                            itemTouchHelper.attachToRecyclerView(binding.recyclerView);
+                                        }
 
                                         binding.progressBar.setVisibility(View.GONE);
                                     }

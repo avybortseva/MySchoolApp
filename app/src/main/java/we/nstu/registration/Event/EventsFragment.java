@@ -84,8 +84,11 @@ public class EventsFragment extends Fragment implements  AddEventDialog.OnEventA
                                         adapter = new EventAdapter(eventList);
 
                                         binding.recyclerView.setAdapter(adapter);
-                                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackEvent(adapter, getContext()));
-                                        itemTouchHelper.attachToRecyclerView(binding.recyclerView);
+                                        if (user.getAccessLevel() != 0)
+                                        {
+                                            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackEvent(adapter, getContext()));
+                                            itemTouchHelper.attachToRecyclerView(binding.recyclerView);
+                                        }
 
                                         binding.progressBar.setVisibility(View.GONE);
                                     }
