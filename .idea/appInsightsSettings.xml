@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="we.nstu.registration" />
-                  <option name="mobileSdkAppId" value="1:139228603806:android:f0d6b63f1ff1e093d6a28f" />
-                  <option name="projectId" value="schoolappforkids" />
-                  <option name="projectNumber" value="139228603806" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

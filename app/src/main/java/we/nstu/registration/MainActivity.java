@@ -1,10 +1,19 @@
 package we.nstu.registration;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,6 +33,7 @@ import we.nstu.registration.Profile.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private ActivityResultLauncher<String[]> pLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +41,12 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        registerPermissionListener();
+        checkNotifyPermission();
+
         String currentFragment = getCurrentFragment();
-        if (currentFragment != null) {
+        if (currentFragment != null)
+        {
             if (currentFragment.equals("NewsFragment")) {
                 replaceFragment(new NewsFragment());
             } else if (currentFragment.equals("EventsFragment")) {
@@ -109,6 +123,28 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
         return sharedPreferences.getString("currentFragment", null);
     }
+
+    private void checkNotifyPermission(){
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) {
+            //Toast.makeText(this,"Camera run", Toast.LENGTH_LONG).show();
+        } else {
+            pLauncher.launch(new String[]{android.Manifest.permission.POST_NOTIFICATIONS});
+        }
+    }
+
+    private void registerPermissionListener(){
+        pLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                    if (result.get(android.Manifest.permission.POST_NOTIFICATIONS))
+                    {
+                        //Toast.makeText(this,"Camera run", Toast.LENGTH_LONG).show();
+                    } else {
+                        //Toast.makeText(this,"Permission denied", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
 }
 
 
