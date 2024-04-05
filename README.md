@@ -23,4 +23,4 @@
 ## Разработчики | Developers
 
 + [Kirill Flek](https://github.com/KirillFlek)
-+ [Anastasiya Vyborceva](https://github.com/KirillFlek)
++ [Anastasiya Vyborceva](https://github.com/avybortseva)
