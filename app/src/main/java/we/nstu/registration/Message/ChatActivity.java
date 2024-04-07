@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import we.nstu.registration.MainActivity;
 import we.nstu.registration.News.NewsFull;
 import we.nstu.registration.News.SchoolNews;
@@ -51,6 +57,7 @@ import we.nstu.registration.databinding.FragmentMessageBinding;
 
 public class ChatActivity extends AppCompatActivity
 {
+    private final String BASE_URL = "http://89.23.99.58:8080/";
     private ChatAdapter chatAdapter;
     private List<ChatMessage> chatMessages;
     private ChatActivityBinding binding;
@@ -191,17 +198,60 @@ public class ChatActivity extends AppCompatActivity
                 database.collection("users").document(companionEmail).get()
                         .addOnSuccessListener(ds -> {
 
-                            String dialogs = ds.get("dialogs").toString();
-                            if (dialogs.isEmpty()) {
-                                dialogs = email;
-                            } else {
-                                dialogs = email + " " + dialogs;
-                                String[] dialogsArray = dialogs.split(" ");
-                                Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
-                                dialogs = String.join(" ", dialogsSet);
-                            }
+                            if(ds.exists())
+                            {
+                                User companion = ds.toObject(User.class);
 
-                            database.collection("users").document(companionEmail).update("dialogs", dialogs);
+                                String dialogs = ds.get("dialogs").toString();
+                                if (dialogs.isEmpty()) {
+                                    dialogs = email;
+                                } else {
+                                    dialogs = email + " " + dialogs;
+                                    String[] dialogsArray = dialogs.split(" ");
+                                    Set<String> dialogsSet = new HashSet<>(Arrays.asList(dialogsArray));
+                                    dialogs = String.join(" ", dialogsSet);
+                                }
+
+                                database.collection("users").document(companionEmail).update("dialogs", dialogs);
+
+                                //Отправка уведомления
+                                database.collection("users").document(email).get()
+                                        .addOnSuccessListener(documentSnapshot -> {
+                                            if(documentSnapshot.exists())
+                                            {
+                                                User user = ds.toObject(User.class);
+
+                                                if(user.getNotifyToken().equals("") || user.getNotifyToken() == null)
+                                                {
+                                                    return;
+                                                }
+
+                                                Retrofit retrofit = new Retrofit.Builder()
+                                                        .baseUrl(BASE_URL)
+                                                        .addConverterFactory(GsonConverterFactory.create())
+                                                        .build();
+
+                                                NotificationService service = retrofit.create(NotificationService.class);
+                                                NotificationBody body = new NotificationBody(user.getFirstName() + " " + user.getSecondName() + " " + user.getSurname(), messageText);
+
+                                                Call<Void> call = service.sendNotification(companion.getNotifyToken(), body);
+                                                call.enqueue(new Callback<Void>() {
+                                                    @Override
+                                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                                        if (response.isSuccessful()) {
+                                                            Log.d("Notification22", "Уведомление отправлено успешно");
+                                                        } else {
+                                                            Log.d("Notification22", "Ошибка при отправке уведомления");
+                                                        }
+                                                    }
+                                                    @Override
+                                                    public void onFailure(Call<Void> call, Throwable t) {
+                                                        Log.d("Notification22", "Ошибка при отправке уведомления: " + t.getMessage());
+                                                    }
+                                                });
+                                            }
+                                        });
+                            }
                         });
 
             }
