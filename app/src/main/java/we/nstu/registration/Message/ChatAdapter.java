@@ -72,13 +72,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
         ChatMessage chatMessage = chatMessages.get(position);
 
-        //Установка имени
-        DocumentReference usersReference = database.collection("users").document(chatMessage.getMessageSender());
-        usersReference.get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    User user = documentSnapshot.toObject(User.class);
-                    holder.nameTextView.setText(user.getFirstName() + " " + user.getSecondName() + " " + user.getSurname());
-                });
+
 
         holder.messageTextView.setText(chatMessage.getMessageText());
         holder.timeTextView.setText(chatMessage.getMessageTime());

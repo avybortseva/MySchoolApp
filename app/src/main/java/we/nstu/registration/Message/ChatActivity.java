@@ -86,7 +86,7 @@ public class ChatActivity extends AppCompatActivity
                     if(documentSnapshot.exists())
                     {
                         User user = documentSnapshot.toObject(User.class);
-                        binding.name.setText(user.getFirstName() + " " + user.getSecondName() + " " + user.getSurname());
+                        binding.name.setText(user.getFirstName() + " " + user.getSecondName());
                     }
                 });
 

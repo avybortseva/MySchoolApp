@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@color/white"
+
         >
 
         <ImageButton
@@ -34,40 +36,46 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:text="@string/name"
-               android:textSize="25sp"
+               android:layout_marginTop="8dp"
+               android:textSize="20sp"
                android:gravity="center"
                />
 
             <TextView
                 android:id="@+id/entryTime"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:text="@string/was_recently"
+                android:textColor="#5C5C5C"
                 android:textSize="15sp"
                 android:gravity="center"
-                android:layout_weight="1"
                 />
 
         </LinearLayout>
 
         <ImageView
-            android:padding="5dp"
             android:id="@+id/avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_weight="1"
-            tools:srcCompat="@tools:sample/avatars"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="4dp"
             android:background="@drawable/circle_background"
+            android:clipToOutline="true"
+            tools:srcCompat="@tools:sample/avatars"
             />
 
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:backgroundTint="@color/white"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/white"
 
         />
 
@@ -82,10 +90,11 @@
         <EditText
             android:id="@+id/messageField"
             android:hint="@string/text_message"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="100"
-            android:layout_margin="5dp"
+            android:layout_weight="94"
+            android:layout_marginStart="14dp"
+            android:inputType="textCapWords"
             />
 
         <ImageButton
