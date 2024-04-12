@@ -8,7 +8,7 @@
    <img src="https://img.shields.io/badge/Version-v0.38%20(In%20developing)-blue?style=flat&logo=android&logoColor=white" alt="Project version: 0.38">
 </p>
 
-<p align="center">Видео-демонстрация приложения: <a href="https://drive.google.com/drive/folders/1nzuVBqYLmecntRhzBe6t2-C2af5Ir58m?usp=sharing">ссылка</a></p>
+<p align="center">Видео-демонстрация приложения: <a href="https://disk.yandex.ru/i/ejnwefDB_523BA">ссылка</a></p>
 
 ## О приложении | About
 
@@ -18,7 +18,7 @@
 * Сообщения
 * Расписание
 * Профиль
-<p>Каждый из разделов приложения выполняет различный функционал. Если у Вас есть идеи для улучшения приложения, то вы можете заполнить <a href="https://forms.gle/xdKv5gZc1KXhf8f96">форму</a>.</p>
+<p>Каждый из разделов приложения выполняет различный функционал. Если у Вас есть идеи для улучшения приложения, то вы можете заполнить <a href="https://forms.yandex.ru/cloud/660fcd3c73cee7727bc2a2ee/">форму</a>.</p>
 
 ## Разработчики | Developers
 
