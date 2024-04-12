@@ -94,7 +94,6 @@
             android:layout_height="match_parent"
             android:layout_weight="94"
             android:layout_marginStart="14dp"
-            android:inputType="textCapWords"
             />
 
         <ImageButton
