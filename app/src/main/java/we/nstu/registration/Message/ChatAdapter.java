@@ -75,7 +75,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
 
         holder.messageTextView.setText(chatMessage.getMessageText());
-        holder.timeTextView.setText(chatMessage.getMessageTime());
+        holder.timeTextView.setText(chatMessage.getMessageTime().substring(0,11));
 
         //Установка аватарки
         FirebaseStorage storage = FirebaseStorage.getInstance();
