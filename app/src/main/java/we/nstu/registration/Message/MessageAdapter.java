@@ -67,15 +67,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         database = FirebaseFirestore.getInstance();
 
         //Установка ФИО собеседника
-        DocumentReference reference = database.collection("users").document(message.getCompanionEmail());
-        reference.get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists())
-                    {
-                        User user = documentSnapshot.toObject(User.class);
-                        holder.titleTextView.setText(user.getSecondName() + " " + user.getFirstName() + " " + user.getSurname());
-                    }
-                });
+        holder.titleTextView.setText(message.getTitle());
 
         // Установка последнего сообщения
         String chatIndex = getChatIndex(message.getCompanionEmail(), message.getEmail()).replace(".", "_dot_");
@@ -90,6 +82,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     String messageJson =  ds.getValue(String.class);
                     ChatMessage chatMessage = chatMessageFromJson(messageJson);
                     holder.textTextView.setText(chatMessage.getMessageText());
+
                 }
             }
 
@@ -137,7 +130,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
     }
 
-    public String getChatIndex(String companionEmail, String email)
+    public static String getChatIndex(String companionEmail, String email)
     {
         List<String> interlocutors = new ArrayList<>();
         interlocutors.add(companionEmail);
