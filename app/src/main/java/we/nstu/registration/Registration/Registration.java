@@ -1,5 +1,7 @@
 package we.nstu.registration.Registration;
 
+import static java.security.AccessController.getContext;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +14,7 @@ import we.nstu.registration.Login.Login;
 import we.nstu.registration.MainActivity;
 import we.nstu.registration.User.Invite;
 import we.nstu.registration.User.User;
+import we.nstu.registration.User.UsersActivity;
 import we.nstu.registration.databinding.FragmentRegistrationBinding;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -151,5 +154,10 @@ public class Registration extends AppCompatActivity
                 Toast.makeText(Registration.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), Login.class));
+        super.onBackPressed();
     }
 }

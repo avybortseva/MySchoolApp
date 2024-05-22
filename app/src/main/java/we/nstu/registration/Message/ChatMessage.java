@@ -4,10 +4,10 @@ import java.util.Objects;
 
 public class ChatMessage
 {
-    private String messageSender;
-    private String messageRecipient;
-    private String messageText;
-    private String messageTime;
+    private String messageSender; //Отправитель
+    private String messageRecipient; //Получатель
+    private String messageText; //Сообщение
+    private String messageTime; //Время
     private boolean messageChecked;
 
     public ChatMessage(String messageSender, String messageRecipient, String messageText, String messageTime, boolean messageChecked) {

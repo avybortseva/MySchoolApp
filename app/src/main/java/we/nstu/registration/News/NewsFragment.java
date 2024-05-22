@@ -35,7 +35,6 @@ public class NewsFragment extends Fragment implements NewsAdapter.OnItemClickLis
     private FirebaseFirestore database;
 
     public NewsFragment() {
-        // Required empty public constructor
     }
 
     @Override

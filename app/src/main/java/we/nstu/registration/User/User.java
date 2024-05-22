@@ -15,9 +15,9 @@ public class User
     private String password; //Пароля
     private int schoolID; //ID школы
     private int classroomID; //ID класса
-    private int accessLevel;
-    private String dialogs;
-    private String notifyToken;
+    private int accessLevel; //Уровень доступа
+    private String dialogs; //собеседники
+    private String notifyToken; //Токен устройства
 
 
     public boolean checkFields(){
